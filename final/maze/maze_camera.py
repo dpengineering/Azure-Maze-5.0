@@ -1,4 +1,4 @@
-from imports.imports import *
+from final.imports.imports import *
 
 from maze_motor import OdriveMotor
 
@@ -26,6 +26,8 @@ class Kinect:
         self.motor.kinect_motor_calibrate()
         self.motor.check_prox_constantly()
         self.time = 0
+
+        self.start_sequence = False
 
     def start(self):
         Thread(target=self.start_thread, daemon=True).start()
@@ -94,7 +96,14 @@ class Kinect:
                     hand_right_x = self.generate_points("right hand").x
                     hand_left_x = self.generate_points("left hand").x
                     hand_slope = (hand_left_y - hand_right_y) / (hand_left_x - hand_right_x)
-                    if abs(vel) <= 2:
+
+                    head_x = self.generate_points("head").x
+                    head_y = self.generate_points("head").y
+
+                    if head_y > hand_right_y and head_y > hand_left_y and hand_left_x-hand_right_x < 50:
+                        self.start_sequence = True
+
+                    if abs(vel) <= 2 and self.start_sequence:
                         if -0.2 < hand_slope < 0.2:
                             self.motor.ax.set_ramped_vel(-(self.motor.ax.get_vel()), int(1.2 * vel))
                         if hand_slope > 0.2:
@@ -111,6 +120,7 @@ class Kinect:
                     self.motor.ball_enter_sensor_tripped = False
             while self.motor.ball_exit_sensor_tripped:
                 self.kinect_setup_image()
+                self.start_sequence = False
                 if self.motor.ball_enter_sensor_tripped:
                     # print("entered")
                     self.motor.ball_exit_sensor_tripped = False
@@ -123,4 +133,8 @@ if __name__ == '__main__':
     k = Kinect()
     k.start()
     while True:
-        sleep(10)
+        try:
+            sleep(10)
+        finally:
+            k.motor.ax.idle()
+

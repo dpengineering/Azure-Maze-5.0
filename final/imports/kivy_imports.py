@@ -12,3 +12,11 @@ from pidev.kivy import ImageButton
 # from datetime import datetime #not working, set date for may 30th, 2022 reminder if emails do work
 from pidev.kivy.selfupdatinglabel import SelfUpdatingLabel
 from pidev.MixPanel import MixPanel
+from kivy.uix.label import Label
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.app import App
+from kivy.core.window import Window
+from kivy.lang import Builder
+from kivy.uix.screenmanager import ScreenManager, Screen
+from datetime import datetime

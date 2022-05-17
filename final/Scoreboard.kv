@@ -1,0 +1,25 @@
+<Scoreboard>:
+    FloatLayout:
+        size_hint: None, None
+
+    Label:
+        id:first_place
+        text: "1st Place: "
+        pos_hint:{"x":0,"y": 0}
+        color: "lightblue"
+        font_size: 30
+
+    Label:
+        id: leaderboard_text
+        text: "Top Scorers:"
+        pos_hint:{"x":0,"y":0.44}
+        color: 0,.1,0,1
+        font_size: 50
+
+
+    DPEAButton:
+        id: cont
+        text: "Continue"
+        on_press: root.continue_program()
+        size: 100, 50
+        pos_hint:{"x": .5, "y": 0}

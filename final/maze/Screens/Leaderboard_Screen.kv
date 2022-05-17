@@ -1,0 +1,29 @@
+<StartScreen>:
+
+    FloatLayout:
+        size_hint: None, None
+
+    Label:
+        id: click_label
+        text: "Welcome to the Kinetic Maze!\n\nTo start, clap your hands above your head:"
+        font_size: 28
+        pos_hint:{"x":.001, "y": 0.4}
+        color: 0, 0, 0, 1
+
+
+    DPEAButton:
+        id: test_button
+        text: 'test'
+        size: 100, 100
+        x: root.width * 0.75
+        y: root.height * 0.5
+        color: 0, 1, 0, 1
+        on_press: root.pressed()
+
+    DPEAButton:
+        text: "test2"
+        size: 100, 100
+        x: root.width * 0.25
+        y: root.height * 0.5
+        color: 1, 0, 0, 1
+        on_press: root.pressed()

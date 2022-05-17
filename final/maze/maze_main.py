@@ -1,6 +1,5 @@
-from imports import *
-from maze_camera import *
-from maze_arduino import *
+from final.maze.maze_camera import *
+from final.maze.maze_arduino import *
 
 
 if __name__ == '__main__':
@@ -17,4 +16,3 @@ if __name__ == '__main__':
             sleep(6)
     finally:
         camera.motor.ax.idle()
-

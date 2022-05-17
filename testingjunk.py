@@ -23,34 +23,63 @@ from time import sleep
 # '''
 # add thgis to class later om ,make the backend a true backend!
 # '''
-timer_time = 0
-def start_timer():
-    '''
-    #starts a timer, this could break because of thread count, transfer to prox sensors
-    '''
-    Thread(target=start_timer_thread).start()
 
-def reset_timer():
-    global base_time
-    base_time = time.time()
-def start_timer_thread():
-    global timer_time, base_time, current_time
-    base_time = time.time()
-    while True:
-        current_time = time.time()
-        timer_time = int(current_time - base_time)
-        sleep(1)
+class Timer:
+    def __init__(self):
+        self.timer_time = 0
+        self.base_time = None
+        self.current_time = None
 
-def ret_time():
-    global timer_time
-    return timer_time
+    def start_timer(self):
+        Thread(target=self.start_timer_thread, daemon=True).start()
 
-start_timer()
+    def start_timer_thread(self):
+        self.base_time = time.time()
+        while True:
+            self.current_time = time.time()
+            self.timer_time = int(self.current_time - self.base_time)
+            sleep(1)
 
+    def reset_timer(self):
+        self.base_time = time.time()
+
+    def return_time(self):
+        return self.timer_time
+
+timer = Timer()
+timer.start_timer()
 while True:
-    print(ret_time())
-    if timer_time == 4:
-        reset_timer()
+    print(timer.return_time())
+    sleep(1)
+#
+# timer_time = 0
+# def start_timer():
+#     '''
+#     #starts a timer, this could break because of thread count, transfer to prox sensors
+#     '''
+#     Thread(target=start_timer_thread).start()
+#
+# def reset_timer():
+#     global base_time
+#     base_time = time.time()
+# def start_timer_thread():
+#     global timer_time, base_time, current_time
+#     base_time = time.time()
+#     while True:
+#         current_time = time.time()
+#         timer_time = int(current_time - base_time)
+#         sleep(1)
+#
+# def return_time():
+#     global timer_time
+#     return timer_time
+#
+# start_timer()
+#
+# while True:
+#     print(return_time())
+#     if timer_time == 4:
+#         reset_timer()
 
 
 

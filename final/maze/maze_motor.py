@@ -1,4 +1,4 @@
-from imports.imports import *
+from final.imports.imports import *
 
 class OdriveMotor:
     def __init__(self, odrive_serial_number = "207C34975748", current_limit=15, velocity_limit=5):
