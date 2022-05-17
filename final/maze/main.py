@@ -19,8 +19,8 @@ Window.clearcolor = (0, 0, 0, 1)  # black
 
 
 class StartScreen(Screen):
+    global camera
     clap = ObjectProperty(None)
-
 
     def enter(self):
         Thread(target=self.enter_thread, daemon=True).start()
@@ -29,7 +29,8 @@ class StartScreen(Screen):
         while True:
             try:
                 sleep(0.1)
-                if camera.start_sequence:
+                if camera.summon_ball:
+                    print('summoning ball')
                     pumps.pump()
                     Clock.schedule_once(self.transition)
                     break
@@ -49,8 +50,8 @@ class PlayScreen(Screen):
 
     def timer(self):
         global score
-        self.timer_button.text = "Get Ready"
-        time.sleep(1)
+        self.timer_button.text = "Ready"
+        time.sleep(7)
         self.timer_button.text = "Three"
         time.sleep(1)
         self.timer_button.text = "Two"
@@ -69,7 +70,6 @@ class PlayScreen(Screen):
             if camera.motor.ball_exit_sensor_tripped:
                 Clock.schedule_once(self.transition)
                 break
-
 
     def transition(self, dt):
         SCREEN_MANAGER.current = TYPE_SCREEN_NAME
@@ -201,10 +201,6 @@ SCREEN_MANAGER.add_widget(StartScreen(name=START_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(PlayScreen(name=PLAY_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(TypeScreen(name=TYPE_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(LeaderboardScreen(name=LEADERBOARD_SCREEN_NAME))
-
-
-
-
 
 if __name__ == "__main__":
     camera = Kinect()

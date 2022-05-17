@@ -12,9 +12,9 @@ class Kinect:
         self.depth_color_image = None
         self.body_frame = None
         self.capture = None
-        # self.Kinect_Motor_Is_On = True
-        self.Kinect_Is_On = True
-        self.Keyboard_Is_On = False
+        self.motor_is_on = True
+        self.kinect_is_on = True
+        self.summon_ball = False
         pykinect.initialize_libraries(module_k4abt_path="/usr/lib/libk4abt.so", track_body=True)
         self.device_config = pykinect.default_configuration
         self.device_config.color_resolution = pykinect.K4A_COLOR_RESOLUTION_OFF
@@ -27,7 +27,7 @@ class Kinect:
         self.motor.check_prox_constantly()
         self.time = 0
 
-        self.start_sequence = False
+        self.summon_ball = False
 
     def start(self):
         Thread(target=self.start_thread, daemon=True).start()
@@ -50,8 +50,6 @@ class Kinect:
 
         self.combined_image = self.body_frame.draw_bodies(self.combined_image)
 
-        # resized = cv2.resize(combined_image, (1000, 1000))
-        # fliparray
         self.combined_image = numpy.fliplr(self.combined_image)
         self.search_for_closest_body(self.body_frame)
         if showImage:
@@ -59,10 +57,10 @@ class Kinect:
         cv2.waitKey(1)
 
     def off(self):
-        self.Kinect_Is_On = False
+        self.kinect_is_on = False
 
     def on(self):
-        self.Kinect_Is_On = True
+        self.kinect_is_on = True
 
     def search_for_closest_body(self, frame):
 
@@ -79,25 +77,19 @@ class Kinect:
             return self.close_body.joints[K4ABT_JOINT_NAMES.index(joint)].position.xyz
 
     def start_thread(self):
-        # watchdog_hit = False
         cv2.namedWindow('Depth image with skeleton', cv2.WINDOW_NORMAL)
-        # print(self.motor.ball_enter_sensor_tripped, self.motor.ball_exit_sensor_tripped)
-        while self.Kinect_Is_On:
+        while self.kinect_is_on:
 
-            while self.motor.ball_enter_sensor_tripped:
+            while self.motor_is_on:
                 self.motor.ax.axis.watchdog_feed()
                 self.kinect_setup_image()
-                # if watchdog_hit:
-                #     self.motor.ax.clear_errors()
-                #     watchdog_hit = False
+
                 if self.close_body is not None:
                     if not self.motor.ax.axis.config.enable_watchdog:
                         self.motor.ax.axis.error = 0
                         self.motor.ax.axis.config.enable_watchdog = True
-                    # Added a min check to ensure velocity between -2 and 2
+
                     vel = float(int(self.generate_points("head").z)) / 1900  # changed back after presentation
-                    # print(vel)
-                    # vel = max(-2, min(2, float(int(self.generate_points("head").z)) / 1900))  # changed back after presentation
 
                     hand_left_y = self.generate_points("left hand").y
                     hand_right_y = self.generate_points("right hand").y
@@ -107,36 +99,41 @@ class Kinect:
 
                     head_x = self.generate_points("head").x
                     head_y = self.generate_points("head").y
-                    # print(hand_slope)
 
-                    if head_y > hand_right_y and head_y > hand_left_y and hand_left_x-hand_right_x < 50:
-                        self.start_sequence = True
-                    if -0.2 < hand_slope < 0.2:
-                        self.motor.ax.set_vel(-(self.motor.ax.get_vel()))
-                    if abs(vel) <= 2 and self.start_sequence:
-                        if hand_slope > 0.2:
-                            self.motor.ax.set_vel(vel)
-                        if hand_slope < -0.2:
-                            self.motor.ax.set_vel(-vel)
-                    if hand_right_x < -700 or hand_right_x > 700:
-                        self.motor.ax.set_ramped_vel(0, 2)
-                    if hand_left_x < -700 or hand_left_x > 700:
-                        self.motor.ax.set_ramped_vel(0, 2)
+                    if head_y > hand_right_y and head_y > hand_left_y and hand_left_x - hand_right_x < 50: #clap above head
+                        self.summon_ball = True
+                    if self.motor.ball_enter_sensor_tripped:
+                        if -0.2 < hand_slope < 0.2:
+                            self.motor.ax.set_vel(-(self.motor.ax.get_vel()))
+                        if abs(vel) <= 2 and self.summon_ball:
+                            if hand_slope > 0.2:
+                                self.motor.ax.set_vel(vel)
+                            if hand_slope < -0.2:
+                                self.motor.ax.set_vel(-vel)
+                        if hand_right_x < -700 or hand_right_x > 700:
+                            self.motor.ax.set_ramped_vel(0, 2)
+                        if hand_left_x < -700 or hand_left_x > 700:
+                            self.motor.ax.set_ramped_vel(0, 2)
+                else:
+                    sleep(self.motor.watchdog_sleep + 0.5)  # greater than or equal to watchdog sleep
+                    self.motor.ax.axis.config.enable_watchdog = False  # remove if lag
                 if self.motor.ball_exit_sensor_tripped:
                     print("exit")
                     self.motor.ax.idle()
+                    sleep(1)
+                    self.summon_ball = False
                     self.motor.ball_enter_sensor_tripped = False
-            sleep(self.motor.watchdog_sleep + 0.5)         #greater than or equal to watchdog sleep
-            self.motor.ax.axis.config.enable_watchdog = False
-            while self.motor.ball_exit_sensor_tripped:
-                # watchdog_hit = True
-                self.start_sequence = False
-                if self.motor.ball_enter_sensor_tripped:
-                    # print("entered")
                     self.motor.ball_exit_sensor_tripped = False
 
-            sleep(0.1)
-            # print('waiting...')
+
+            # while self.motor.ball_exit_sensor_tripped:
+            #     self.kinect_setup_image()
+            #     if self.motor.ball_enter_sensor_tripped:
+            #         self.motor.ball_exit_sensor_tripped = False
+            #         self.motor_is_on = True
+            #         self.summon_ball = False
+
+            # sleep(0.1)
 
 
 if __name__ == '__main__':
@@ -147,4 +144,3 @@ if __name__ == '__main__':
             sleep(10)
         finally:
             k.motor.ax.idle()
-

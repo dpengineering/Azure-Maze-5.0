@@ -33,7 +33,7 @@ class StartScreen(Screen):
     def enter_thread(self):
         while True:
             try:
-                if camera_is_ready and camera.start_sequence:
+                if camera_is_ready and camera.summon_ball:
                     print("Switching to play screen")
                     # self.clap.trigger_action(0.1)
                     break
