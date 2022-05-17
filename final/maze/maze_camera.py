@@ -79,13 +79,21 @@ class Kinect:
             return self.close_body.joints[K4ABT_JOINT_NAMES.index(joint)].position.xyz
 
     def start_thread(self):
+        # watchdog_hit = False
         cv2.namedWindow('Depth image with skeleton', cv2.WINDOW_NORMAL)
-        print(self.motor.ball_enter_sensor_tripped, self.motor.ball_exit_sensor_tripped)
+        # print(self.motor.ball_enter_sensor_tripped, self.motor.ball_exit_sensor_tripped)
         while self.Kinect_Is_On:
+
             while self.motor.ball_enter_sensor_tripped:
+                self.motor.ax.axis.watchdog_feed()
                 self.kinect_setup_image()
-                # tested, works
+                # if watchdog_hit:
+                #     self.motor.ax.clear_errors()
+                #     watchdog_hit = False
                 if self.close_body is not None:
+                    if not self.motor.ax.axis.config.enable_watchdog:
+                        self.motor.ax.axis.error = 0
+                        self.motor.ax.axis.config.enable_watchdog = True
                     # Added a min check to ensure velocity between -2 and 2
                     vel = float(int(self.generate_points("head").z)) / 1900  # changed back after presentation
                     # print(vel)
@@ -99,13 +107,13 @@ class Kinect:
 
                     head_x = self.generate_points("head").x
                     head_y = self.generate_points("head").y
+                    # print(hand_slope)
 
                     if head_y > hand_right_y and head_y > hand_left_y and hand_left_x-hand_right_x < 50:
                         self.start_sequence = True
-
+                    if -0.2 < hand_slope < 0.2:
+                        self.motor.ax.set_vel(-(self.motor.ax.get_vel()))
                     if abs(vel) <= 2 and self.start_sequence:
-                        if -0.2 < hand_slope < 0.2:
-                            self.motor.ax.set_ramped_vel(-(self.motor.ax.get_vel()), int(1.2 * vel))
                         if hand_slope > 0.2:
                             self.motor.ax.set_vel(vel)
                         if hand_slope < -0.2:
@@ -118,8 +126,10 @@ class Kinect:
                     print("exit")
                     self.motor.ax.idle()
                     self.motor.ball_enter_sensor_tripped = False
+            sleep(self.motor.watchdog_sleep + 0.5)         #greater than or equal to watchdog sleep
+            self.motor.ax.axis.config.enable_watchdog = False
             while self.motor.ball_exit_sensor_tripped:
-                self.kinect_setup_image()
+                # watchdog_hit = True
                 self.start_sequence = False
                 if self.motor.ball_enter_sensor_tripped:
                     # print("entered")

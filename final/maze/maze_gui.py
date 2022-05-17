@@ -35,7 +35,7 @@ class StartScreen(Screen):
             try:
                 if camera_is_ready and camera.start_sequence:
                     print("Switching to play screen")
-                    self.clap.trigger_action(0.1)
+                    # self.clap.trigger_action(0.1)
                     break
             except NameError:
                 pass
@@ -58,8 +58,8 @@ class PlayScreen(Screen):
         print("entered")
 
 
-Builder.load_file('Screens/Start_Screen.kv')
-Builder.load_file('Screens/Play_Screen.kv')
+Builder.load_file('Screens/StartScreen.kv')
+Builder.load_file('Screens/PlayScreen.kv')
 SCREEN_MANAGER.add_widget(StartScreen(name=START_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(PlayScreen(name=PLAY_SCREEN_NAME))
 
@@ -73,8 +73,9 @@ def start_thread():
         camera_is_ready = True
         while True:
             while not camera.motor.ball_enter_sensor_tripped:
-                pumps.pump()
-                sleep(3)
+                # pumps.pump()
+                # sleep(3)
+                sleep(1)
             sleep(6)
     finally:
         camera.motor.ax.idle()

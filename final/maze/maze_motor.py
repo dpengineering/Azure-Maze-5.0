@@ -5,8 +5,12 @@ class OdriveMotor:
         self.serial_number = odrive_serial_number
         self.current_limit = current_limit
         self.velocity_limit = velocity_limit
+        self.watchdog_sleep = 5
         self.odrive_board = odrive.find_any(serial_number=self.serial_number)
         self.ax = ODrive_Axis(self.odrive_board.axis0, self.current_limit, self.velocity_limit)
+        self.ax.axis.config.enable_watchdog = False
+        self.ax.axis.error = 0
+        self.ax.axis.config.watchdog_timeout = self.watchdog_sleep
         self.homing_sensor = -7
         self.ball_enter_sensor = -9
         self.ball_exit_sensor = -8

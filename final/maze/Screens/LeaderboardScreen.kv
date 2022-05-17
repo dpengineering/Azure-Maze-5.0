@@ -1,0 +1,26 @@
+<LeaderboardScreen>:
+    #from kivy.clock import Clock
+    on_enter: root.enter()
+    #on_enter: Clock.schedule_once(self.enter, 3)
+
+    leaderboard: leaderboard
+
+    name: 'leader'
+    FloatLayout:
+        size_hint: None, None
+
+    Label:
+        id: leaderboard
+        text: 'To StartScreen'
+        font_size: 70
+        size: 100, 100
+        pos_hint:{"x":0,"y": -0.13}
+        color: 0.3, 0.3, 0.3, 1
+
+    Label:
+        id: leaderboard_greeting
+        text: 'Top 10 Scorers'
+        font_size: 200
+        size: 100, 100
+        pos_hint:{"x":0,"y": 0.4}
+        color: 0.3, 0.3, 0.3, 1
