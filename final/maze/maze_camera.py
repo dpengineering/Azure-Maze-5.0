@@ -26,7 +26,12 @@ class Kinect:
         self.motor.kinect_motor_calibrate()
         self.motor.check_prox_constantly()
         self.time = 0
-
+        self.key_left = False
+        self.key_right = False
+        self.row_top = False
+        self.row_middle = False
+        self.row_bottom = False
+        self.row_enter = False
         self.summon_ball = False
 
     def start(self):
@@ -81,7 +86,10 @@ class Kinect:
         while self.kinect_is_on:
 
             while self.motor_is_on:
-                self.motor.ax.axis.watchdog_feed()
+                # print(self.motor.ax.get_vel())
+                if abs(self.motor.ax.get_vel()) <= 2.5:
+                    self.motor.ax.axis.watchdog_feed()
+
                 self.kinect_setup_image()
 
                 if self.close_body is not None:
@@ -99,17 +107,31 @@ class Kinect:
 
                     head_x = self.generate_points("head").x
                     head_y = self.generate_points("head").y
+                    head_x_adjusted = head_x + 1000
+                    # 2000
+                    if 0 < head_x_adjusted < 600:  # right side
+                        self.row_bottom = True
+                    if 660 < head_x_adjusted < 1260:  # middle side
+                        self.row_middle = True
+                    if 1320 < head_x_adjusted < 1920:  # left side
+                        self.row_top = True
+                    if hand_slope > 0.2:
+                        self.key_left = True
+                    if hand_slope < -0.2:
+                        self.key_right = True
 
-                    if head_y > hand_right_y and head_y > hand_left_y and hand_left_x - hand_right_x < 50: #clap above head
+                    if head_y > hand_right_y and head_y > hand_left_y and hand_left_x - hand_right_x < 50:  # clap above head
                         self.summon_ball = True
+
                     if self.motor.ball_enter_sensor_tripped:
                         if -0.2 < hand_slope < 0.2:
                             self.motor.ax.set_vel(-(self.motor.ax.get_vel()))
                         if abs(vel) <= 2 and self.summon_ball:
-                            if hand_slope > 0.2:
+                            if hand_slope > 0.2:  # left
                                 self.motor.ax.set_vel(vel)
-                            if hand_slope < -0.2:
+                            if hand_slope < -0.2:  # right
                                 self.motor.ax.set_vel(-vel)
+
                         if hand_right_x < -700 or hand_right_x > 700:
                             self.motor.ax.set_ramped_vel(0, 2)
                         if hand_left_x < -700 or hand_left_x > 700:
@@ -124,7 +146,6 @@ class Kinect:
                     self.summon_ball = False
                     self.motor.ball_enter_sensor_tripped = False
                     self.motor.ball_exit_sensor_tripped = False
-
 
             # while self.motor.ball_exit_sensor_tripped:
             #     self.kinect_setup_image()

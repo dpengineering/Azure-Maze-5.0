@@ -28,7 +28,7 @@ class StartScreen(Screen):
     def enter_thread(self):
         while True:
             try:
-                sleep(0.1)
+                sleep(0.01)
                 if camera.summon_ball:
                     print('summoning ball')
                     pumps.pump()
@@ -111,6 +111,11 @@ class TypeScreen(Screen):
 
     def enter(self):
         self.set_keyboard_keys()
+        Thread(target=self.keyboard_movement, daemon=True).start()
+
+    def keyboard_movement(self):
+        while True:
+            print(camera.row_middle)
 
     def set_keyboard_keys(self):
         KeyboardObjectList = [self.q1, self.w1, self.e1, self.r1, self.t1, self.y1, self.u1, self.i1, self.o1, self.p1,
