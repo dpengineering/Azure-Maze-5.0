@@ -51,3 +51,10 @@ class Ball_Pump:
         self.start_right_pump()
         sleep(1)
         self.stop_pumps()
+
+
+if __name__ == '__main__':
+    bp = Ball_Pump("right")
+    while True:
+        e = input("Enter which pump: ")
+        bp.pump()
