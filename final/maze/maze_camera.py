@@ -23,8 +23,7 @@ class Kinect:
         self.bodyTracker = pykinect.start_body_tracker()
         self.close_body = None  # phase into closest centered body, reject left and right bounds
         self.motor = OdriveMotor("207C34975748", 15, 5)  # TODO: changed from 10 to 5 # why
-        self.motor.kinect_motor_calibrate()
-        self.motor.check_prox_constantly()
+
         self.time = 0
         self.key_left = False
         self.key_right = False

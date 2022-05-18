@@ -23,6 +23,7 @@ class StartScreen(Screen):
     clap = ObjectProperty(None)
 
     def enter(self):
+        # camera.motor.home_maze()
         Thread(target=self.enter_thread, daemon=True).start()
 
     def enter_thread(self):
@@ -116,6 +117,10 @@ class TypeScreen(Screen):
     def keyboard_movement(self):
         while True:
             print(camera.row_middle)
+            camera.row_middle = False
+            if SCREEN_MANAGER.current != TYPE_SCREEN_NAME:
+                break
+            sleep(0.25)
 
     def set_keyboard_keys(self):
         KeyboardObjectList = [self.q1, self.w1, self.e1, self.r1, self.t1, self.y1, self.u1, self.i1, self.o1, self.p1,
