@@ -1,13 +1,16 @@
-from final.imports.imports import *
 from final.imports.kivy_imports import *
-from maze_camera import *
-from maze_arduino import *
+from final.maze.maze_camera import *
+from final.maze.maze_arduino import *
 
+camera = Kinect()
+pumps = Ball_Pump("left")
 SCREEN_MANAGER = ScreenManager()
 START_SCREEN_NAME = 'start'
 PLAY_SCREEN_NAME = 'play'
 TYPE_SCREEN_NAME = 'type'
 LEADERBOARD_SCREEN_NAME = 'leader'
+
+
 
 
 class MazeGUI(App):
@@ -19,11 +22,11 @@ Window.clearcolor = (0, 0, 0, 1)  # black
 
 
 class StartScreen(Screen):
-    global camera
+
     clap = ObjectProperty(None)
 
     def enter(self):
-        # camera.motor.home_maze() #try ex this in while loop if possible, homing should work, see links in maze motor if things break + search path
+        camera.motor.home_maze()
         Thread(target=self.enter_thread, daemon=True).start()
 
     def enter_thread(self):
@@ -38,6 +41,7 @@ class StartScreen(Screen):
                     break
             except NameError:
                 pass
+        print("Exiting Start Thread")
 
     def transition(self, dt):
         SCREEN_MANAGER.current = PLAY_SCREEN_NAME
@@ -202,6 +206,7 @@ class LeaderboardScreen(Screen):
         self.leaderboard.text = ""
         self.leaderboard_greeting.text = "Thank you\nfor playing!"
 
+
     def transition(self, dt):
         SCREEN_MANAGER.current = START_SCREEN_NAME
 
@@ -215,12 +220,8 @@ SCREEN_MANAGER.add_widget(PlayScreen(name=PLAY_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(TypeScreen(name=TYPE_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(LeaderboardScreen(name=LEADERBOARD_SCREEN_NAME))
 
-def start():
-    global camera, pumps
-    camera = Kinect()
-    pumps = Ball_Pump("left")
+
+if __name__ == "__main__":
     camera.start()
     camera.motor.ax.idle()
     MazeGUI().run()
-if __name__ == "__main__":
-    start()

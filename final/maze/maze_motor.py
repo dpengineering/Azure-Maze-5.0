@@ -2,6 +2,7 @@ from final.imports.imports import *
 
 class OdriveMotor:
     def __init__(self, odrive_serial_number = "207C34975748", current_limit=15, velocity_limit=7):
+        print("OdriveMotor Connecting: DO NOT CALIBRATE UNDER LOAD< DO NOT DELETE THIS REMINDER< ")
         self.serial_number = odrive_serial_number
         self.current_limit = current_limit
         self.velocity_limit = velocity_limit
@@ -21,17 +22,16 @@ class OdriveMotor:
         self.ax.clear_errors()
         self.kinect_motor_calibrate()
         self.check_switches_constantly()
-        self.home_maze()
+        # self.home_maze()
 
         # dump_errors(self.odrive_board)
-
-
 
     def home_maze(self):
         # self.ax.home_with_endstops(vel=0.1)
         # velocity = 2
         self.ax.set_vel(1)
         while True:
+            # print(int(bin(self.odrive_board.get_gpio_states())[-7]) == 0)
             if int(bin(self.odrive_board.get_gpio_states())[-7]) == 0:
                 self.ax.set_home()
                 break
@@ -39,7 +39,7 @@ class OdriveMotor:
         while self.ax.is_busy():
             sleep(1)
 
-        self.ax.set_pos_traj(-3.115, 0.3, 2, 1) # pos, accel, deaccel, home
+        self.ax.set_pos_traj(-3.11, 0.3, 2, 1) # pos, accel, deaccel, home
         sleep(1)
         while self.ax.is_busy():
             sleep(1)
@@ -82,7 +82,7 @@ class OdriveMotor:
 
 if __name__ == '__main__':
     sleep(3)
-    kinect_motor = OdriveMotor(odrive_serial_number = "207C34975748", current_limit=20, velocity_limit=8)
+    kinect_motor = OdriveMotor(odrive_serial_number = "207C34975748", current_limit=20, velocity_limit=5)
     try:
         # kinect_motor.ax.set_vel(2)
         kinect_motor.home_maze()

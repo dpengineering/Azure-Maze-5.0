@@ -60,8 +60,6 @@ class Kinect:
             cv2.imshow('Depth image with skeleton', self.combined_image)
         cv2.waitKey(1)
 
-
-
     def search_for_closest_body(self, frame):
 
         body_list = [frame.get_body_skeleton(body_num) for body_num in
@@ -79,14 +77,13 @@ class Kinect:
     def start_thread(self):
         cv2.namedWindow('Depth image with skeleton', cv2.WINDOW_NORMAL)
         while self.kinect_is_on:
-
+            # turn toff the ewatchdog and clear the error
             while self.motor_is_on:
+                self.kinect_setup_image()
 
                 # print(self.motor.ax.get_vel())
                 if abs(self.motor.ax.get_vel()) <= 2.5:
                     self.motor.ax.axis.watchdog_feed()
-
-                self.kinect_setup_image()
 
                 if self.close_body is not None:
                     if not self.motor.ax.axis.config.enable_watchdog:
@@ -120,14 +117,17 @@ class Kinect:
                         self.summon_ball = True
 
                     if self.motor.ball_enter_sensor_tripped:
-
+                        # print("entered")
                         if -0.2 < hand_slope < 0.2:
+                            print("stopping")
                             self.motor.ax.set_vel(-(self.motor.ax.get_vel()))
                         if abs(vel) <= 2 and self.summon_ball:
                             if hand_slope > 0.2:  # left
+                                print("left")
                                 self.motor.ax.set_vel(vel)
                             if hand_slope < -0.2:  # right
                                 self.motor.ax.set_vel(-vel)
+                                print("right")
 
                         if hand_right_x < -700 or hand_right_x > 700:
                             self.motor.ax.set_ramped_vel(0, 2)

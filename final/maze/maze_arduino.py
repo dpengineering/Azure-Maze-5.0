@@ -2,18 +2,37 @@ from final.imports.imports import *
 
 
 class Ball_Pump:
-    def __init__(self, start_orientation):
+    def __init__(self):
         self.board = Arduino('/dev/ttyUSB0')  # /dev/ttyUSB0 = port of the Arduino nano
+        with open("maze_arduino.txt", "r") as f:
+            start_orientation = str(f.readline())
         self.orientation = start_orientation
+
+
+
+    # def log_new_position(self):
+    #     with open("maze_arduino.txt", "r+") as f:
+    #         if str(f.readline()) == "right":
+    #             self.orientation = "left"
+    #             f.truncate(0)
+    #             f.write(str(self.orientation))
+    #         elif str(f.readline()) == "left":
+    #             self.orientation = "right"
+    #             f.truncate(0)
+    #             f.write(str(self.orientation))
 
     def pump(self):
         if self.orientation == "left":
             self.pump_left_once()
-            # print("left pump")
+            with open("maze_arduino.txt", "w") as f:
+                f.truncate(0)
+                f.write("right")
             self.orientation = "right"
         elif self.orientation == "right":
             self.pump_right_once()
-            # print("right pump")
+            with open("maze_arduino.txt", "w") as f:
+                f.truncate(0)
+                f.write("left")
             self.orientation = "left"
 
     def change_pump(self, pump_num):
@@ -23,13 +42,13 @@ class Ball_Pump:
         if pump_num == 1:
             self.board.digital[4].write(1)
             self.board.digital[3].write(0)
-            pump_num = 0
+            # pump_num = 0
             # print(f"pumping left pump {pump_num}")
 
         elif pump_num == 0:
             self.board.digital[4].write(0)
             self.board.digital[3].write(1)
-            pump_num = 1
+            # pump_num = 1
             # print(f"pumping right pump {pump_num}")
 
     def start_left_pump(self):
@@ -54,7 +73,7 @@ class Ball_Pump:
 
 
 if __name__ == '__main__':
-    bp = Ball_Pump("left")
+    bp = Ball_Pump()
     while True:
         e = input("Enter which pump: ")
         bp.pump()
