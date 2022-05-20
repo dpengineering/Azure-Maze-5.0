@@ -24,6 +24,18 @@ class StartScreen(Screen):
 
     def enter(self):
         # camera.motor.home_maze() #try ex this in while loop if possible, homing should work, see links in maze motor if things break + search path
+        # while True:
+        #     try:
+        #         if camera.motor.homed:
+        #             break
+        #         while not camera.motor.homed:
+        #             camera.motor.home_maze()
+        #             sleep(20)
+        #             if camera.motor.homed:
+        #                 break
+        #     except NameError:
+        #         pass
+
         Thread(target=self.enter_thread, daemon=True).start()
 
     def enter_thread(self):
@@ -111,8 +123,9 @@ class TypeScreen(Screen):
     nickname = ObjectProperty(None)
 
     def enter(self):
-        self.set_keyboard_keys()
-        Thread(target=self.keyboard_movement, daemon=True).start()
+        Clock.schedule_once(callback=self.transition)
+        # self.set_keyboard_keys()
+        # Thread(target=self.keyboard_movement, daemon=True).start()
 
     def keyboard_movement(self):
         while True:
@@ -161,11 +174,11 @@ class TypeScreen(Screen):
             with open("leaderboard.txt", "a") as f:
                 f.write(score + " ")
                 f.write(self.nickname.text + "\n")
-            self.transition()
+            Clock.schedule_once(callback=self.transition)
         else:
             self.nickname.text = "Not A Name!"
 
-    def transition(self):
+    def transition(self, dt):
         SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME
 
 

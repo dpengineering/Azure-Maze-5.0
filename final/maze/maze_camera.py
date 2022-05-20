@@ -140,6 +140,7 @@ class Kinect:
                     self.motor.ax.axis.config.enable_watchdog = False  # remove if lag
                 if self.motor.ball_exit_sensor_tripped:
                     print("exit")
+                    self.motor.homed = False
                     self.motor.ax.idle()
                     sleep(1)
                     self.summon_ball = False
