@@ -5,7 +5,7 @@ class OdriveMotor:
         self.serial_number = odrive_serial_number
         self.current_limit = current_limit
         self.velocity_limit = velocity_limit
-        self.homed = False
+        self.is_homed = False
         self.watchdog_sleep = 0.5
         self.odrive_board = odrive.find_any(serial_number=self.serial_number)
         self.ax = ODrive_Axis(self.odrive_board.axis0, self.current_limit, self.velocity_limit)
@@ -21,6 +21,7 @@ class OdriveMotor:
         self.ax.clear_errors()
         self.kinect_motor_calibrate()
         self.check_switches_constantly()
+
         # dump_errors(self.odrive_board)
 
 
@@ -37,12 +38,12 @@ class OdriveMotor:
         while self.ax.is_busy():
             sleep(1)
 
-        self.ax.set_pos_traj(-3.12, 1, 2, 1) # pos, accel, deaccel, home
+        self.ax.set_pos_traj(-3.115, 0.3, 6, 1) # pos, accel, deaccel, home
         sleep(1)
         while self.ax.is_busy():
             sleep(1)
 
-        self.homed = True
+        self.is_homed = True
         print('homed')
 
 
@@ -79,8 +80,8 @@ class OdriveMotor:
 
 
 if __name__ == '__main__':
-    sleep(4)
-    kinect_motor = OdriveMotor(odrive_serial_number = "207C34975748", current_limit=15, velocity_limit=7)
+    sleep(3)
+    kinect_motor = OdriveMotor(odrive_serial_number = "207C34975748", current_limit=20, velocity_limit=8)
     try:
         # kinect_motor.ax.set_vel(2)
         kinect_motor.home_maze()

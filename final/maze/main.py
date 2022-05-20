@@ -33,6 +33,7 @@ class StartScreen(Screen):
                 if camera.summon_ball:
                     print('summoning ball')
                     pumps.pump()
+                    sleep(2)
                     Clock.schedule_once(self.transition)
                     break
             except NameError:
@@ -214,7 +215,7 @@ SCREEN_MANAGER.add_widget(LeaderboardScreen(name=LEADERBOARD_SCREEN_NAME))
 
 if __name__ == "__main__":
     camera = Kinect()
-    pumps = Ball_Pump("right")
+    pumps = Ball_Pump("left")
     camera.start()
     camera.motor.ax.idle()
     MazeGUI().run()

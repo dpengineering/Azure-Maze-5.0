@@ -54,7 +54,7 @@ class Ball_Pump:
 
 
 if __name__ == '__main__':
-    bp = Ball_Pump("right")
+    bp = Ball_Pump("left")
     while True:
         e = input("Enter which pump: ")
         bp.pump()

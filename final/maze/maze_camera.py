@@ -23,7 +23,6 @@ class Kinect:
         self.bodyTracker = pykinect.start_body_tracker()
         self.close_body = None  # phase into closest centered body, reject left and right bounds
         self.motor = OdriveMotor("207C34975748", 15, 5)  # TODO: changed from 10 to 5 # why
-
         self.time = 0
         self.key_left = False
         self.key_right = False
@@ -123,6 +122,7 @@ class Kinect:
                         self.summon_ball = True
 
                     if self.motor.ball_enter_sensor_tripped:
+
                         if -0.2 < hand_slope < 0.2:
                             self.motor.ax.set_vel(-(self.motor.ax.get_vel()))
                         if abs(vel) <= 2 and self.summon_ball:
@@ -140,7 +140,6 @@ class Kinect:
                     self.motor.ax.axis.config.enable_watchdog = False  # remove if lag
                 if self.motor.ball_exit_sensor_tripped:
                     print("exit")
-                    self.motor.homed = False
                     self.motor.ax.idle()
                     sleep(1)
                     self.summon_ball = False
