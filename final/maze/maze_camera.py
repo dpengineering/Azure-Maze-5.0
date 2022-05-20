@@ -31,6 +31,7 @@ class Kinect:
         self.row_bottom = False
         self.row_enter = False
         self.summon_ball = False
+        self.kinect_is_ready = True
 
     def start(self):
         Thread(target=self.start_thread, daemon=True).start()
@@ -59,11 +60,7 @@ class Kinect:
             cv2.imshow('Depth image with skeleton', self.combined_image)
         cv2.waitKey(1)
 
-    def off(self):
-        self.kinect_is_on = False
 
-    def on(self):
-        self.kinect_is_on = True
 
     def search_for_closest_body(self, frame):
 
@@ -84,6 +81,7 @@ class Kinect:
         while self.kinect_is_on:
 
             while self.motor_is_on:
+
                 # print(self.motor.ax.get_vel())
                 if abs(self.motor.ax.get_vel()) <= 2.5:
                     self.motor.ax.axis.watchdog_feed()
@@ -136,13 +134,15 @@ class Kinect:
                         if hand_left_x < -700 or hand_left_x > 700:
                             self.motor.ax.set_ramped_vel(0, 2)
                 else:
+
                     sleep(self.motor.watchdog_sleep + 0.5)  # greater than or equal to watchdog sleep
-                    self.motor.ax.axis.config.enable_watchdog = False  # remove if lag
+                    self.motor.ax.axis.config.enable_watchdog = False
                 if self.motor.ball_exit_sensor_tripped:
                     print("exit")
                     self.motor.ax.idle()
                     sleep(1)
                     self.summon_ball = False
+                    self.motor.is_homed = False
                     self.motor.ball_enter_sensor_tripped = False
                     self.motor.ball_exit_sensor_tripped = False
 

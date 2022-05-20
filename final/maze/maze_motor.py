@@ -21,6 +21,7 @@ class OdriveMotor:
         self.ax.clear_errors()
         self.kinect_motor_calibrate()
         self.check_switches_constantly()
+        self.home_maze()
 
         # dump_errors(self.odrive_board)
 
@@ -38,7 +39,7 @@ class OdriveMotor:
         while self.ax.is_busy():
             sleep(1)
 
-        self.ax.set_pos_traj(-3.115, 0.3, 6, 1) # pos, accel, deaccel, home
+        self.ax.set_pos_traj(-3.115, 0.3, 2, 1) # pos, accel, deaccel, home
         sleep(1)
         while self.ax.is_busy():
             sleep(1)

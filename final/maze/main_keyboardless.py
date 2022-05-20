@@ -169,9 +169,9 @@ class TypeScreen(Screen):
     def transition(self):
         SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME
 
-
 class LeaderboardScreen(Screen):
     leaderboard = ObjectProperty(None)
+    leaderboard_greeting = ObjectProperty(None)
 
     def enter(self):
         self.score_update()
@@ -199,6 +199,8 @@ class LeaderboardScreen(Screen):
         self.leaderboard.text = score_board
         Clock.schedule_once(self.transition, 5)
         # that took way too long
+        self.leaderboard.text = ""
+        self.leaderboard_greeting.text = "Thank you\nfor playing!"
 
     def transition(self, dt):
         SCREEN_MANAGER.current = START_SCREEN_NAME
@@ -213,9 +215,12 @@ SCREEN_MANAGER.add_widget(PlayScreen(name=PLAY_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(TypeScreen(name=TYPE_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(LeaderboardScreen(name=LEADERBOARD_SCREEN_NAME))
 
-if __name__ == "__main__":
+def start():
+    global camera, pumps
     camera = Kinect()
     pumps = Ball_Pump("left")
     camera.start()
     camera.motor.ax.idle()
     MazeGUI().run()
+if __name__ == "__main__":
+    start()
