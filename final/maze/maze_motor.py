@@ -22,7 +22,7 @@ class OdriveMotor:
         self.ax.clear_errors()
         self.kinect_motor_calibrate()
         self.check_switches_constantly()
-        # self.home_maze()
+        self.home_maze()
 
         # dump_errors(self.odrive_board)
 

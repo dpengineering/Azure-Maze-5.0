@@ -1,3 +1,5 @@
+import threading
+
 from final.imports.imports import *
 
 from maze_motor import OdriveMotor
@@ -14,7 +16,6 @@ class Kinect:
         self.capture = None
         self.motor_is_on = True
         self.kinect_is_on = True
-        self.summon_ball = False
         pykinect.initialize_libraries(module_k4abt_path="/usr/lib/libk4abt.so", track_body=True)
         self.device_config = pykinect.default_configuration
         self.device_config.color_resolution = pykinect.K4A_COLOR_RESOLUTION_OFF
@@ -74,11 +75,18 @@ class Kinect:
         if self.close_body is not None:
             return self.close_body.joints[K4ABT_JOINT_NAMES.index(joint)].position.xyz
 
+    def home_maze(self):
+        self.motor.ax.set_pos_traj(-3.11, 0.3, 2, 1)
+        sleep(1)
+        while self.motor.ax.is_busy():
+            sleep(1)
+
     def start_thread(self):
         cv2.namedWindow('Depth image with skeleton', cv2.WINDOW_NORMAL)
         while self.kinect_is_on:
             # turn toff the ewatchdog and clear the error
             while self.motor_is_on:
+
                 self.kinect_setup_image()
 
                 # print(self.motor.ax.get_vel())
@@ -86,6 +94,7 @@ class Kinect:
                     self.motor.ax.axis.watchdog_feed()
 
                 if self.close_body is not None:
+
                     if not self.motor.ax.axis.config.enable_watchdog:
                         self.motor.ax.axis.error = 0
                         self.motor.ax.axis.config.enable_watchdog = True
@@ -119,15 +128,15 @@ class Kinect:
                     if self.motor.ball_enter_sensor_tripped:
                         # print("entered")
                         if -0.2 < hand_slope < 0.2:
-                            print("stopping")
+                            # print("stopping")
                             self.motor.ax.set_vel(-(self.motor.ax.get_vel()))
                         if abs(vel) <= 2 and self.summon_ball:
                             if hand_slope > 0.2:  # left
-                                print("left")
+                                # print("left")
                                 self.motor.ax.set_vel(vel)
                             if hand_slope < -0.2:  # right
                                 self.motor.ax.set_vel(-vel)
-                                print("right")
+                                # print("right")
 
                         if hand_right_x < -700 or hand_right_x > 700:
                             self.motor.ax.set_ramped_vel(0, 2)
@@ -139,9 +148,13 @@ class Kinect:
                     self.motor.ax.axis.config.enable_watchdog = False
                 if self.motor.ball_exit_sensor_tripped:
                     print("exit")
+                    self.summon_ball = False
+                    self.motor.ax.axis.error = 0
+                    self.motor.ax.axis.config.enable_watchdog = False
+                    self.home_maze()
                     self.motor.ax.idle()
                     sleep(1)
-                    self.summon_ball = False
+
                     self.motor.is_homed = False
                     self.motor.ball_enter_sensor_tripped = False
                     self.motor.ball_exit_sensor_tripped = False

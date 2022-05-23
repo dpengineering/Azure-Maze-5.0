@@ -1,9 +1,11 @@
+import threading
+
 from final.imports.kivy_imports import *
 from final.maze.maze_camera import *
 from final.maze.maze_arduino import *
 
 camera = Kinect()
-pumps = Ball_Pump("left")
+pumps = Ball_Pump()
 SCREEN_MANAGER = ScreenManager()
 START_SCREEN_NAME = 'start'
 PLAY_SCREEN_NAME = 'play'
@@ -26,7 +28,9 @@ class StartScreen(Screen):
     clap = ObjectProperty(None)
 
     def enter(self):
-        camera.motor.home_maze()
+        print(f"Thread Count {threading.active_count()}")
+        # camera.motor.home_maze()
+        # camera.motor.ax.set_pos_traj(-3.11, 0.3, 2, 1)
         Thread(target=self.enter_thread, daemon=True).start()
 
     def enter_thread(self):
@@ -36,7 +40,7 @@ class StartScreen(Screen):
                 if camera.summon_ball:
                     print('summoning ball')
                     pumps.pump()
-                    sleep(2)
+                    sleep(4) #was2
                     Clock.schedule_once(self.transition)
                     break
             except NameError:
