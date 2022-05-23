@@ -77,3 +77,5 @@ if __name__ == '__main__':
     while True:
         e = input("Enter which pump: ")
         bp.pump()
+
+#if no work, connect to serial id with arudinmo app opem
