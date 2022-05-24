@@ -1,3 +1,5 @@
+import threading
+
 from final.imports.kivy_imports import *
 from final.maze.maze_camera import *
 from final.maze.maze_arduino import *
@@ -26,19 +28,24 @@ class StartScreen(Screen):
     clap = ObjectProperty(None)
 
     def enter(self):
-        camera.motor.home_maze()
-
+        print(f"Thread Count {threading.active_count()}")
+        # camera.motor.home_maze()
+        # camera.motor.ax.set_pos_traj(-3.11, 0.3, 2, 1)
         Thread(target=self.enter_thread, daemon=True).start()
 
     def enter_thread(self):
         while True:
-            sleep(0.01)
-            if camera.summon_ball:
-                print('summoning ball')
-                pumps.pump()
-                sleep(2)
-                Clock.schedule_once(self.transition)
-                break
+            try:
+                sleep(0.01)
+                if camera.summon_ball:
+                    print('summoning ball')
+                    pumps.pump()
+                    sleep(4) #was2
+                    Clock.schedule_once(self.transition)
+                    break
+            except NameError:
+                pass
+        print("Exiting Start Thread")
 
     def transition(self, dt):
         SCREEN_MANAGER.current = PLAY_SCREEN_NAME
@@ -200,8 +207,8 @@ class LeaderboardScreen(Screen):
         self.leaderboard.text = score_board
         Clock.schedule_once(self.transition, 5)
         # that took way too long
-        self.leaderboard.text = ""
-        self.leaderboard_greeting.text = "Thank you\nfor playing!"
+        # self.leaderboard.text = ""
+        # self.leaderboard_greeting.text = "Thank you\nfor playing!"
 
 
     def transition(self, dt):

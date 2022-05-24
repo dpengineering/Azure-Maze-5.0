@@ -54,9 +54,20 @@ class Kinect:
         self.combined_image = cv2.addWeighted(self.depth_color_image, 0.6, self.body_image_color, 0.4, 0)
 
         self.combined_image = self.body_frame.draw_bodies(self.combined_image)
+        #new
+        self.combined_image = cv2.cvtColor(self.combined_image, cv2.COLOR_BGR2RGB)
 
+        if self.close_body is not None:
+            head_x = self.generate_points("head").x
+            head_y = self.generate_points("head").y
+            self.combined_image = cv2.putText(self.combined_image, 'Current Player', (int(head_x),
+                                            int(head_y)), cv2.FONT_HERSHEY_SIMPLEX,
+                                              1, (255, 0, 0), 2, cv2.LINE_AA)
+        #end new
         self.combined_image = numpy.fliplr(self.combined_image)
         self.search_for_closest_body(self.body_frame)
+
+
         if showImage:
             cv2.imshow('Depth image with skeleton', self.combined_image)
         cv2.waitKey(1)
@@ -76,7 +87,8 @@ class Kinect:
             return self.close_body.joints[K4ABT_JOINT_NAMES.index(joint)].position.xyz
 
     def home_maze(self):
-        self.motor.ax.set_pos_traj(-3.11, 0.3, 2, 1)
+        # self.motor.ax.set_pos_traj(-3.11, 0.3, 2, 1)
+        self.motor.home_maze()
         sleep(1)
         while self.motor.ax.is_busy():
             sleep(1)

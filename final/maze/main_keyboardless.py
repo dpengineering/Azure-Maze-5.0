@@ -5,7 +5,7 @@ from final.maze.maze_camera import *
 from final.maze.maze_arduino import *
 
 camera = Kinect()
-pumps = Ball_Pump("left")
+pumps = Ball_Pump()
 SCREEN_MANAGER = ScreenManager()
 START_SCREEN_NAME = 'start'
 PLAY_SCREEN_NAME = 'play'
