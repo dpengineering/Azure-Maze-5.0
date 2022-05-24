@@ -149,16 +149,12 @@ class Kinect:
                         self.row_top = True
                     if hand_slope > 0.2: # key left
                         self.key_left = True
-                        self.movement_text = "lefting"
                     if hand_slope < -0.2: # key right
                         self.key_right = True
-                        self.movement_text = "righting"
                     if hand_left_z > head_z and hand_right_z > head_z:
                         self.delete = True
-                        self.movement_text = "deleting"
                     if abs(hand_slope) < 0.2 and head_y > hand_right_y + 100 and head_y > hand_left_y + 100:
                         self.row_enter = True
-                        self.movement_text = "entering"
 
 
                     if hand_left_y < (head_y + 100) and hand_left_y > (head_y - 100) and hand_left_x < (
