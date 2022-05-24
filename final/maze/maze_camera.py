@@ -25,14 +25,19 @@ class Kinect:
         self.close_body = None  # phase into closest centered body, reject left and right bounds
         self.motor = OdriveMotor("207C34975748", 15, 5)  # TODO: changed from 10 to 5 # why
         self.time = 0
+
+        self.movement_text = ""
+
+        self.summon_ball = False
+
         self.key_left = False
         self.key_right = False
         self.row_top = False
         self.row_middle = False
         self.row_bottom = False
         self.row_enter = False
-        self.summon_ball = False
-        self.kinect_is_ready = True
+        self.clicked = False
+        self.delete = False
 
     def start(self):
         Thread(target=self.start_thread, daemon=True).start()
@@ -54,19 +59,18 @@ class Kinect:
         self.combined_image = cv2.addWeighted(self.depth_color_image, 0.6, self.body_image_color, 0.4, 0)
 
         self.combined_image = self.body_frame.draw_bodies(self.combined_image)
+
+
+
+
+        self.combined_image = numpy.fliplr(self.combined_image)
+        self.search_for_closest_body(self.body_frame)
         #new
         self.combined_image = cv2.cvtColor(self.combined_image, cv2.COLOR_BGR2RGB)
 
-        if self.close_body is not None:
-            head_x = self.generate_points("head").x
-            head_y = self.generate_points("head").y
-            self.combined_image = cv2.putText(self.combined_image, 'Current Player', (int(head_x),
-                                            int(head_y)), cv2.FONT_HERSHEY_SIMPLEX,
-                                              1, (255, 0, 0), 2, cv2.LINE_AA)
-        #end new
-        self.combined_image = numpy.fliplr(self.combined_image)
-        self.search_for_closest_body(self.body_frame)
-
+        self.combined_image = cv2.putText(self.combined_image, self.movement_text, (50, 50),
+                                          cv2.FONT_HERSHEY_SIMPLEX,
+                                          1, (255, 0, 0), 2, cv2.LINE_AA)
 
         if showImage:
             cv2.imshow('Depth image with skeleton', self.combined_image)
@@ -85,6 +89,13 @@ class Kinect:
     def generate_points(self, joint: str):
         if self.close_body is not None:
             return self.close_body.joints[K4ABT_JOINT_NAMES.index(joint)].position.xyz
+
+    def type_on_frame(self, text: str):
+        self.combined_image = cv2.cvtColor(self.combined_image, cv2.COLOR_BGR2RGB)
+
+        self.combined_image = cv2.putText(self.combined_image, text, (50,50),
+                                          cv2.FONT_HERSHEY_SIMPLEX,
+                                          1, (255, 0, 0), 2, cv2.LINE_AA)
 
     def home_maze(self):
         # self.motor.ax.set_pos_traj(-3.11, 0.3, 2, 1)
@@ -117,6 +128,13 @@ class Kinect:
                     hand_right_y = self.generate_points("right hand").y
                     hand_right_x = self.generate_points("right hand").x
                     hand_left_x = self.generate_points("left hand").x
+                    hand_right_z = self.generate_points("right hand").z
+                    hand_left_z = self.generate_points("left hand").z
+
+                    head_x = self.generate_points("head").x
+                    head_y = self.generate_points("head").y
+                    head_z = self.generate_points("head").z
+
                     hand_slope = (hand_left_y - hand_right_y) / (hand_left_x - hand_right_x)
 
                     head_x = self.generate_points("head").x
@@ -129,10 +147,20 @@ class Kinect:
                         self.row_middle = True
                     if 1320 < head_x_adjusted < 1920:  # left side
                         self.row_top = True
-                    if hand_slope > 0.2:
+                    if hand_slope > 0.2: # key left
                         self.key_left = True
-                    if hand_slope < -0.2:
+                    if hand_slope < -0.2: # key right
                         self.key_right = True
+                    if hand_left_z > head_z and hand_right_z > head_z:
+                        self.delete = True
+                    if abs(hand_slope) < 0.2 and head_y > hand_right_y + 100 and head_y > hand_left_y + 100:
+                        self.row_enter = True
+
+                    if hand_left_y < (head_y + 100) and hand_left_y > (head_y - 100) and hand_left_x < (
+                            head_x + 100) and hand_left_x > (head_x - 100) or hand_right_y < (
+                            head_y + 100) and hand_right_y > (head_y - 100) and hand_right_x < (
+                            head_x + 100) and hand_right_x > (head_x - 100):
+                        self.clicked = True
 
                     if head_y > hand_right_y and head_y > hand_left_y and hand_left_x - hand_right_x < 50:  # clap above head
                         self.summon_ball = True
@@ -140,15 +168,16 @@ class Kinect:
                     if self.motor.ball_enter_sensor_tripped:
                         # print("entered")
                         if -0.2 < hand_slope < 0.2:
-                            # print("stopping")
+                            self.movement_text = "stopping"
                             self.motor.ax.set_vel(-(self.motor.ax.get_vel()))
                         if abs(vel) <= 2 and self.summon_ball:
                             if hand_slope > 0.2:  # left
-                                # print("left")
+                                self.movement_text = "lefting"
                                 self.motor.ax.set_vel(vel)
+
                             if hand_slope < -0.2:  # right
                                 self.motor.ax.set_vel(-vel)
-                                # print("right")
+                                self.movement_text = "righting"
 
                         if hand_right_x < -700 or hand_right_x > 700:
                             self.motor.ax.set_ramped_vel(0, 2)
@@ -160,6 +189,8 @@ class Kinect:
                     self.motor.ax.axis.config.enable_watchdog = False
                 if self.motor.ball_exit_sensor_tripped:
                     print("exit")
+                    self.movement_text = ""
+                    self.motor.is_homed = False
                     self.summon_ball = False
                     self.motor.ax.axis.error = 0
                     self.motor.ax.axis.config.enable_watchdog = False
@@ -167,7 +198,7 @@ class Kinect:
                     self.motor.ax.idle()
                     sleep(1)
 
-                    self.motor.is_homed = False
+                    self.motor.is_homed = True
                     self.motor.ball_enter_sensor_tripped = False
                     self.motor.ball_exit_sensor_tripped = False
 
