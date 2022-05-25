@@ -60,12 +60,10 @@ class Kinect:
 
         self.combined_image = self.body_frame.draw_bodies(self.combined_image)
 
-
-
-
         self.combined_image = numpy.fliplr(self.combined_image)
-        self.search_for_closest_body(self.body_frame)
-        #new
+        # self.search_for_closest_body(self.body_frame)
+        self.findClosestCenteredIndex()
+        # new
         self.combined_image = cv2.cvtColor(self.combined_image, cv2.COLOR_BGR2RGB)
 
         self.combined_image = cv2.putText(self.combined_image, self.movement_text, (50, 50),
@@ -75,6 +73,32 @@ class Kinect:
         if showImage:
             cv2.imshow('Depth image with skeleton', self.combined_image)
         cv2.waitKey(1)
+
+    def findClosestCenteredIndex(
+            self):  # Expected return: Index of closest body, their head's x value, their head's y value
+        head_x_values = []
+        head_z_values = []
+        for body_index in range(self.body_frame.get_num_bodies()):
+            body_skel = self.body_frame.get_body_skeleton(body_index)
+            head_x = abs(body_skel.joints[K4ABT_JOINT_NAMES.index("head")].position.xyz.x)
+            head_x_values.append(head_x)
+            head_z = body_skel.joints[K4ABT_JOINT_NAMES.index("head")].position.xyz.z
+            head_z_values.append(head_z)
+        for body_index in range(self.body_frame.get_num_bodies()):
+            if head_z_values[body_index] > 4500:
+                head_x_values[body_index] = 10000
+        if len(head_x_values) > 0:
+            closest_body_skel = self.body_frame.get_body_skeleton(head_x_values.index(min(head_x_values)))
+            head_depth_z = closest_body_skel.joints[K4ABT_JOINT_NAMES.index("head")].position.xyz.z
+            joint_names = ["nose", "right shoulder", "left shoulder", "left knee", "right knee"]
+            joints_out_of_bounds = [closest_body_skel.joints[K4ABT_JOINT_NAMES.index(name)].position.xyz.x == 0 for name
+                                    in joint_names]
+            if any(joints_out_of_bounds):
+                self.close_body = None
+            else:
+                self.close_body = closest_body_skel
+        else:
+            self.close_body = None
 
     def search_for_closest_body(self, frame):
 
@@ -147,24 +171,24 @@ class Kinect:
                         self.row_middle = True
                     if 1320 < head_x_adjusted < 1920:  # left side
                         self.row_top = True
-                    if hand_slope > 0.2: # key left
+                    if hand_slope > 0.2:  # key left
                         self.key_left = True
-                    if hand_slope < -0.2: # key right
+                    if hand_slope < -0.2:  # key right
                         self.key_right = True
                     if hand_left_z > head_z and hand_right_z > head_z:
                         self.delete = True
-                    if abs(hand_slope) < 0.2 and head_y > hand_right_y + 100 and head_y > hand_left_y + 100:
-                        self.row_enter = True
-
+                    # if abs(hand_slope) < 0.2 and head_y > hand_right_y + 100 and head_y > hand_left_y + 100:
+                    #     self.row_enter = True
 
                     if hand_left_y < (head_y + 100) and hand_left_y > (head_y - 100) and hand_left_x < (
                             head_x + 100) and hand_left_x > (head_x - 100) or hand_right_y < (
                             head_y + 100) and hand_right_y > (head_y - 100) and hand_right_x < (
                             head_x + 100) and hand_right_x > (head_x - 100):
                         self.clicked = True
-
-                    if head_y > hand_right_y and head_y > hand_left_y and hand_left_x - hand_right_x < 50:  # clap above head
+                    if abs(hand_slope) < 0.2 and head_y > hand_right_y + 10 and head_y > hand_left_y + 10:
                         self.summon_ball = True
+                    # if head_y > hand_right_y and head_y > hand_left_y and hand_left_x - hand_right_x < 50:  # clap above head
+                    #     self.summon_ball = True
 
                     if self.motor.ball_enter_sensor_tripped:
                         # print("entered")
@@ -190,7 +214,7 @@ class Kinect:
                     self.motor.ax.axis.config.enable_watchdog = False
                 if self.motor.ball_exit_sensor_tripped:
                     print("exit")
-                    self.movement_text = ""
+                    self.movement_text = "please wait for maze to home"
                     self.motor.is_homed = False
                     self.summon_ball = False
                     self.motor.ax.axis.error = 0
@@ -198,19 +222,10 @@ class Kinect:
                     self.home_maze()
                     self.motor.ax.idle()
                     sleep(1)
-
+                    self.movement_text = "ready!"
                     self.motor.is_homed = True
                     self.motor.ball_enter_sensor_tripped = False
                     self.motor.ball_exit_sensor_tripped = False
-
-            # while self.motor.ball_exit_sensor_tripped:
-            #     self.kinect_setup_image()
-            #     if self.motor.ball_enter_sensor_tripped:
-            #         self.motor.ball_exit_sensor_tripped = False
-            #         self.motor_is_on = True
-            #         self.summon_ball = False
-
-            # sleep(0.1)
 
 
 if __name__ == '__main__':

@@ -24,13 +24,9 @@ Window.clearcolor = (0, 0, 0, 1)  # black
 
 
 class StartScreen(Screen):
-
     clap = ObjectProperty(None)
-
     def enter(self):
         print(f"Thread Count {threading.active_count()}")
-        # camera.motor.home_maze()
-        # camera.motor.ax.set_pos_traj(-3.11, 0.3, 2, 1)
         Thread(target=self.enter_thread, daemon=True).start()
 
     def enter_thread(self):
@@ -53,11 +49,10 @@ class StartScreen(Screen):
 
 class PlayScreen(Screen):
     timer_button = ObjectProperty(None)
-
     def enter(self):
         self.timer_button.text = ""
         Thread(target=self.timer, daemon=True).start()
-
+#revert toyes commit
     def timer(self):
         global score
         self.timer_button.text = "Ready"
@@ -72,10 +67,12 @@ class PlayScreen(Screen):
         time.sleep(1.3)
         base_time = time.time()
         while True:
+            # restart to here
+            print(self.movement_text.text)
             c_time = time.time()
             score = int(c_time - base_time)
             score = str(score)
-            sleep(1)
+            sleep(1) # was 1, change back if lag or error
             self.timer_button.text = score
             if camera.motor.ball_exit_sensor_tripped:
                 Clock.schedule_once(self.transition)

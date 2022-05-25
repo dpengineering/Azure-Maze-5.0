@@ -82,7 +82,7 @@ class PlayScreen(Screen):
                 break
 
     def transition(self, dt):
-        SCREEN_MANAGER.current = TYPE_SCREEN_NAME
+        SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME
 
 
 class TypeScreen(Screen):

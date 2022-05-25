@@ -2,6 +2,7 @@
     on_enter: root.enter()
 
     timer_button: timer_button
+    movement_text: movement_text
 
     name: 'play'
     FloatLayout:
@@ -15,3 +16,22 @@
         center_y: root.height * 0.5
         color: 0.1, 0.1, 0.1, 1
         on_press: root.transition()
+
+
+    ImageButton:
+        id: right
+        source: 'images/right.png'
+        size_hint: 0.5, 0.5
+        center_x: self.width * 0.2
+    ImageButton:
+        id: left
+        source: 'images/left.png'
+        size_hint: 0.5, 0.5
+        center_x: self.width * 1.8
+
+    Label:
+        id: movement_text
+        text: "None"
+        center_x: self.width * 1.8
+        center_y: self.height * 0.5
+
