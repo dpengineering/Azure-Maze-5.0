@@ -11,7 +11,7 @@ Q: What happened to 3.0 and 4.0?
 
 A: They're there on the Tuf Gaming computer in the undercarriage of the maze. Note that in there may be some code pertaining to the Mirrored Light Sculpture on there (or maybe it's on another computer...?), but please don't lose those!
 
-**please read the rest of this readme, you may have to do some steps if you aren't using the 'Tuf Gaming' computer, but take note that all specific documentation is located in the [`documentation`](https://github.com/dpengineering/Azure-Maze-5.0/tree/documentation) branch of this project.**
+**please read the rest of this readme, you may have to do some steps if you aren't using the 'Tuf Gaming' computer, but take note that all specific documentation is located in the [`documentation`](https://github.com/dpengineering/Azure-Maze-5.0/tree/documentation) branch of this project. Just click on any file and there will be comments next to each line (save for imports).**
 
 ## Installation ##
 ***This is already done on the 'Tuf Gaming' Computer, situated under the circuitry in the Kinetic Maze. Skip this step if this is you.***
