@@ -57,6 +57,9 @@ It calculates the slope (like you learned in math class) between your left and r
 The motor currently brakes by setting its current velocity to negative what the encoder reads. This allows the wheel to stop with some momentum included - it is more responsive this way.
 
 TODO: set Odrive to precalibrated `odrv0.axis0.motor.config.pre_calibrated`.
+TODO: make one beautiful, 'full-screen' version of the project that has the camera output built into it, instead of a seperate window. 
+Look into the [Gantry Game GUI]([url](https://github.com/dpengineering/GantryGame3.0/blob/Main/Picasso_Bot_Gui.py)) or into the original [Picasso Bot GUI]([url](https://github.com/nikhi1g/Picasso_Bot_Gui/blob/main/Picasso_Bot_Gui.py)). Good Luck!
+-Nikhil :)
 
 
 
