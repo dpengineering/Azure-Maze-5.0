@@ -45,7 +45,18 @@ To start the project, clone this repo or download directly.
 Navigate to final/imports and open all three files.
 Make sure that all the imported packages are downloaded correctly. Make sure to keep kivy specific imports seperate from the other packages, as it will try to open up a starter window automatically if you import kivy_imports.py along with imports.py and ODrive_Ease_Lib.py.
 
-Great! Now head over to final/maze/main_keyboardless.py and run that file. Head over to the back of the project and disconnect the motor from interacting with the wheel. The odrive will start to calibrate. Wait until it finishes calibrating - it will start to spin in only one direction, which means that it is homing. TODO: set Odrive to precalibrated `odrv0.axis0.motor.config.pre_calibrated`.
+Great! Now head over to final/maze/main_keyboardless.py and run that file. Head over to the back of the project and disconnect the motor from interacting with the wheel. The odrive will start to calibrate. Wait until it finishes calibrating - it will start to spin in only one direction, which means that it is homing, and you can set it down. **If you don't do this step properly you will get error CONTROLLER_ERROR_SPINOUT_DETECTED when you dump errors of odboard, and will have to troubleshoot.**
+
+Now sit back and wait for TWO windows to pop up, and then left justify the camera output screen and right justify the kivy screen. Copy the images on the screen to work the project.
+
+How the project works currently: 
+
+Joints: x,y,z, measured in mm from the lens of the camera.
+
+It calculates the slope (like you learned in math class) between your left and right hands. Based on whether the slope is positive, negative, or close to flat, the Odrive will spin the wheel clockwise, counterclockwise, or stop. 
+The motor currently brakes by setting its current velocity to negative what the encoder reads. This allows the wheel to stop with some momentum included - it is more responsive this way.
+
+TODO: set Odrive to precalibrated `odrv0.axis0.motor.config.pre_calibrated`.
 
 
 
