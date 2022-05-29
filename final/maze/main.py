@@ -4,10 +4,10 @@ from final.imports.kivy_imports import *
 from final.maze.maze_camera import *
 from final.maze.maze_arduino import *
 
-camera = Kinect()
-pumps = Ball_Pump()
-SCREEN_MANAGER = ScreenManager()
-START_SCREEN_NAME = 'start'
+camera = Kinect() # creates Kinect object as instance camera from maze_camera
+pumps = Ball_Pump()# creates ball pump object as instance pumps from maze_arduino
+SCREEN_MANAGER = ScreenManager() # allows one to switch screens, and is constantly being returned in the MazeGUI class.
+START_SCREEN_NAME = 'start' # this should look familiar. If not check ouout the starter code inside https://github.com/dpengineering/RaspberryPiCommon/tree/master/PiKivyProjects/NewProject
 PLAY_SCREEN_NAME = 'play'
 TYPE_SCREEN_NAME = 'type'
 LEADERBOARD_SCREEN_NAME = 'leader'
@@ -20,46 +20,46 @@ class MazeGUI(App):
         return SCREEN_MANAGER
 
 
-Window.clearcolor = (0, 0, 0, 1)  # black
+Window.clearcolor = (0, 0, 0, 1)  # sets window color to black
 
 
 class StartScreen(Screen):
 
-    clap = ObjectProperty(None)
+    clap = ObjectProperty(None) # referenced from StartScreen.kv
 
-    def enter(self):
-        print(f"Thread Count {threading.active_count()}")
-        # camera.motor.home_maze()
-        # camera.motor.ax.set_pos_traj(-3.11, 0.3, 2, 1)
+    def enter(self):  # this function is called when the StartScreen.kv is loaded.
+        print(f"Thread Count {threading.active_count()}")  # threading.active_count is very useful, as it returns the number of active threads. think of a thread like a worker that the main project spawsn, which can do work while other things are executing.
+        # camera.motor.home_maze()  # don't need this
+        # camera.motor.ax.set_pos_traj(-3.11, 0.3, 2, 1)  # don't need this, but set_pos_traj goes to a pos at an acceleration, target velocity, and deacceleration. Kind of like an airplane.
         Thread(target=self.enter_thread, daemon=True).start()
 
-    def enter_thread(self):
+    def enter_thread(self): # a thread, what this does it allows the user to summon a ball.
         while True:
             try:
                 sleep(0.01)
                 if camera.summon_ball:
                     print('summoning ball')
-                    pumps.pump()
-                    sleep(4) #was2
-                    Clock.schedule_once(self.transition)
+                    pumps.pump() # pumps left of right pump based on the input rewritten in maze_arduino.txt
+                    sleep(4) #was2  # waits a bit
+                    Clock.schedule_once(self.transition)  # calls the transition function. Clock.schedule_once(func, dt) is a great way of executing functions outside a thread, from inside a thread.
                     break
             except NameError:
-                pass
+                pass # this try/except can probably be removed as the camera object fully loads now.
         print("Exiting Start Thread")
 
     def transition(self, dt):
-        SCREEN_MANAGER.current = PLAY_SCREEN_NAME
+        SCREEN_MANAGER.current = PLAY_SCREEN_NAME  # changes the output screen to PLAY_SCREEN_NAME, which is loaded at the bottom of the file, and referenced next.
 
 
 class PlayScreen(Screen):
-    timer_button = ObjectProperty(None)
+    timer_button = ObjectProperty(None)  # the timer button has an attribute called text, which is updated frequently in the while loop.
 
     def enter(self):
-        self.timer_button.text = ""
-        Thread(target=self.timer, daemon=True).start()
+        self.timer_button.text = ""  # clear from previous loop of project
+        Thread(target=self.timer, daemon=True).start()  # thread
 
     def timer(self):
-        global score
+        global score  # global a score variable so that it can be called later and prevents miswrites which affects leaderboard scoring
         self.timer_button.text = "Ready"
         time.sleep(7)
         self.timer_button.text = "Three"
@@ -72,7 +72,7 @@ class PlayScreen(Screen):
         time.sleep(1.3)
         base_time = time.time()
         while True:
-            c_time = time.time()
+            c_time = time.time() 
             score = int(c_time - base_time)
             score = str(score)
             sleep(1)
@@ -85,7 +85,7 @@ class PlayScreen(Screen):
         SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME
 
 
-class TypeScreen(Screen):
+class TypeScreen(Screen):  # keyboardscreen, which does not work at the moment, but should allow input for name.
     a1 = ObjectProperty(None)
     b1 = ObjectProperty(None)
     c1 = ObjectProperty(None)
@@ -123,7 +123,7 @@ class TypeScreen(Screen):
         self.set_keyboard_keys()
         Thread(target=self.keyboard_movement, daemon=True).start()
 
-    def keyboard_movement(self):
+    def keyboard_movement(self):  # failed :(
         while True:
             print(camera.row_middle)
             camera.row_middle = False
@@ -131,7 +131,7 @@ class TypeScreen(Screen):
                 break
             sleep(0.25)
 
-    def set_keyboard_keys(self):
+    def set_keyboard_keys(self):  # if you need a keyboard, this is a great code snippet to copy along with the rest of the kivy stuff.
         KeyboardObjectList = [self.q1, self.w1, self.e1, self.r1, self.t1, self.y1, self.u1, self.i1, self.o1, self.p1,
                               self.a1, self.s1, self.d1, self.f1, self.g1, self.h1, self.j1, self.k1, self.l1,
                               self.space,
@@ -177,7 +177,7 @@ class TypeScreen(Screen):
     def transition(self):
         SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME
 
-class LeaderboardScreen(Screen):
+class LeaderboardScreen(Screen):  # sorts any file into a leaderboard that has the format: score, name, newline
     leaderboard = ObjectProperty(None)
     leaderboard_greeting = ObjectProperty(None)
 
@@ -213,9 +213,9 @@ class LeaderboardScreen(Screen):
 
     def transition(self, dt):
         SCREEN_MANAGER.current = START_SCREEN_NAME
-
-
-Builder.load_file('Screens/StartScreen.kv')
+ 
+ #loads each of the files needed from Screens.
+Builder.load_file('Screens/StartScreen.kv') 
 Builder.load_file('Screens/PlayScreen.kv')
 Builder.load_file('Screens/TypeScreen.kv')
 Builder.load_file('Screens/LeaderboardScreen.kv')
@@ -226,6 +226,6 @@ SCREEN_MANAGER.add_widget(LeaderboardScreen(name=LEADERBOARD_SCREEN_NAME))
 
 
 if __name__ == "__main__":
-    camera.start()
-    camera.motor.ax.idle()
-    MazeGUI().run()
+    camera.start()  # calls instance of Kinect to execute start function. only works because this in of itself calls a thread
+    camera.motor.ax.idle()  # frees the motor, so that it doesn't burn up? or is that loop control...?
+    MazeGUI().run()  # runs the gui
