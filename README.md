@@ -6,7 +6,8 @@ Note that this is a Dos Pueblos Engineering Academy project, and it is assumed t
 
 
 ## Installation ##
-***Note that this is already done on the 'Tuf Gaming' Computer, situated under the circuitry in the Kinetic Maze***
+***This is already done on the 'Tuf Gaming' Computer, situated under the circuitry in the Kinetic Maze***
+
 Instructions to install the Azure Kinect SDK are from microsoft, copied here for convinience.
 
 1. Configure the Microsoft Package Repository, and install the Azure Kinect packages (tools, headers, and body tracking):
