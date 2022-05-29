@@ -62,13 +62,36 @@ Joints: x,y,z, measured in mm from the lens of the camera.
 It calculates the slope (like you learned in math class) between your left and right hands. Based on whether the slope is positive, negative, or close to flat, the Odrive will spin the wheel clockwise, counterclockwise, or stop. 
 The motor currently brakes by setting its current velocity to negative what the encoder reads. This allows the wheel to stop with some momentum included - it is more responsive this way.
 
+File Structure: 
+
+final: contains the classes, text storage, and kivy files.
+
+final/imports: contains all the imports that were used for the project, and serves as a good way of organizing code.
+final/maze: code for all the classes, UI, and main files that run the project.
+
+final/maze/Screens: houses each kivy screen that is used in both final/maze/main.py and final/maze//main_keyboardless.py
+final/maze/leaderboard.txt: houses the leaderboard, which on working properly allows people to enter in their name, which it does, just not hands free from final/maze/main.py. 
+final/maze/maze_arduino.txt: stores the last direction pumped, so that the project never gets unevenly stacked with the pool balls.
+
+main.py: runs through each screen of Screens, currently is bugged.
+**main_keyboardless.py:** runs without keyboard or leaderboard, and runs very smoothly. there is only one issue with the Arduino sometimes not working when the user wants it to pump a ball.
+
+the **classes** housed in final that are used are in maze_arduino.py, maze_camera.py, and maze_motor.py. maze_timer.py works, but is not used.
+
+maze_arduino.py: connects to the arduino upon initialization and controls the pumps.
+maze_camera.py: controls the camera (Kinect), and an instance of the class in maze_motor.py
+maze_motor.py: controls the motor (Odrive), and also checks for proximity sensors. Make sure that when you move the motor you only have that movement in one part of your code. Controlling the motor from two threads will throw an unfixable error, and the fix is just to not do that (learned that the hard way).
+
+Arduino: Backup storage for the arduino code. 
+pyKinectAzure: [IMPORTANT](https://github.com/ibaiGorordo/pyKinectAzure) library that actually allows us to use the Kinect.
+testingjunk.py: coding scratchpad for ideas. was currently working on speech-to-text to enter names and the now successful timer class.
+
 TODO: set Odrive to precalibrated `odrv0.axis0.motor.config.pre_calibrated`.
 
 TODO: make one beautiful, 'full-screen' version of the project that has the camera output built into it, instead of a seperate window. 
 Look into [Gantry Game GUI](https://github.com/dpengineering/GantryGame3.0/blob/Main/Picasso_Bot_Gui.py) and the original [Picasso Bot GUI](https://github.com/nikhi1g/Picasso_Bot_Gui/blob/main/Picasso_Bot_Gui.py), and of course Google!
 
 TODO: add a current 'position' image to the kivy PlayScreen.kv and main_keyboardless.py where it displays the action figure of what the person is doing. You can accomplish this with self.movement_text, or directly from hand_slope with linked variables.
-
 
 
 
