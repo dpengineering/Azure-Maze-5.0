@@ -37,13 +37,11 @@ AzureKinectFirmwareTool -q
 ## Azure Kinect on Linux ##
 As most Microsoft documentation is windows based, Linux usage will be documented as thoroughly as possible for future use. In general, follow instructions in the Microsoft documentation.
 
-To launch the Azure Kinect Viewer, run `k4aviewer` in the command line.
-
-Joints: x,y,z, measured in mm from the lens of the camera.
+To launch the Azure Kinect Viewer, run `k4aviewer` in the command line. A window will pop up from the terminal. Hit 'start' to verify that the camera is working.
 
 ## How to Run ##
 
-TODO
+To start the project, clone this repo or download directly.
 
 
 
