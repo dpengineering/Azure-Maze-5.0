@@ -1,11 +1,12 @@
 # Azure-Maze-5.0
 Kinetic Maze with Azure Kinect and Python Library
 
-Note that this is a Dos Pueblos Engineering Academy project, and it is assumed that this project is running with DPEA pre-configured hardware/software, specifically [RaspberryPiCommon](https://github.com/dpengineering/RaspberryPiCommon), and assocatiated engineering packages.
+Note that this is a Dos Pueblos Engineering Academy project, and it is assumed that this project is running with DPEA pre-configured hardware/software, specifically [RaspberryPiCommon](https://github.com/dpengineering/RaspberryPiCommon), and assocatiated engineering packages. You have probably learned about this already.
 
 
 
 ## Installation ##
+***Note that this is already done on the 'Tuf Gaming' Computer, situated under the circuitry in the Kinetic Maze***
 Instructions to install the Azure Kinect SDK are from microsoft, copied here for convinience.
 
 1. Configure the Microsoft Package Repository, and install the Azure Kinect packages (tools, headers, and body tracking):
