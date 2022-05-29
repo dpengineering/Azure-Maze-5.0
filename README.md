@@ -58,7 +58,7 @@ The motor currently brakes by setting its current velocity to negative what the 
 
 TODO: set Odrive to precalibrated `odrv0.axis0.motor.config.pre_calibrated`.
 TODO: make one beautiful, 'full-screen' version of the project that has the camera output built into it, instead of a seperate window. 
-Look into the [Gantry Game GUI]([Gantry Game GUI]](https://github.com/dpengineering/GantryGame3.0/blob/Main/Picasso_Bot_Gui.py)) or into the original [Picasso Bot GUI]([Picasso Bot GUI](https://github.com/nikhi1g/Picasso_Bot_Gui/blob/main/Picasso_Bot_Gui.py)). Good Luck!
+Look into the [Gantry Game GUI]](https://github.com/dpengineering/GantryGame3.0/blob/Main/Picasso_Bot_Gui.py)) or into the original [Picasso Bot GUI](https://github.com/nikhi1g/Picasso_Bot_Gui/blob/main/Picasso_Bot_Gui.py)). Good Luck!
 -Nikhil :)
 
 
