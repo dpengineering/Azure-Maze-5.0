@@ -126,3 +126,4 @@ TODO: add a current 'position' image to the kivy PlayScreen.kv and main_keyboard
 
 
 ## Note ##
+Looking back, and when you look at the project, it may not even make sense at all. You may want to give up, or leave out features. It is important that you know how much I wish the best for you to work on this project and in future years to come. You do not need any level of documentation for code to work, if you understand it, and you may think, great!, I'm done! And push. NO. Please, please make sure that if it is not clear, you explain your code. Because as you expand on whatever code it is you work on, you will forget why you  
