@@ -1,13 +1,14 @@
-import threading
+ # this is the version of the project that should loop endlessly, and works until the arduinos don't pump for some weird reason.
 
+import threading  # for active_count, for some reason isn't imported regularly
 from final.imports.kivy_imports import *
 from final.maze.maze_camera import *
 from final.maze.maze_arduino import *
 
-camera = Kinect()
-pumps = Ball_Pump()
-SCREEN_MANAGER = ScreenManager()
-START_SCREEN_NAME = 'start'
+camera = Kinect() # instance of Kinect class, has instance of Odrive built in, as well as prox sensor and switches, which are GPIO
+pumps = Ball_Pump() # instance of Ball_Pump class, which allows for control of ball pumps
+SCREEN_MANAGER = ScreenManager()  # allows us to control the screen
+START_SCREEN_NAME = 'start'  # loaded at bottom, allows for shortcut to call
 PLAY_SCREEN_NAME = 'play'
 TYPE_SCREEN_NAME = 'type'
 LEADERBOARD_SCREEN_NAME = 'leader'
@@ -15,16 +16,16 @@ LEADERBOARD_SCREEN_NAME = 'leader'
 
 
 
-class MazeGUI(App):
+class MazeGUI(App):  # always returns what the SCREEN_MANAGER is
     def build(self):
         return SCREEN_MANAGER
 
 
-Window.clearcolor = (0, 0, 0, 1)  # black
+Window.clearcolor = (0, 0, 0, 1)  # black, sets the window color
 
 
 class StartScreen(Screen):
-    clap = ObjectProperty(None)
+    clap = ObjectProperty(None)   # clap: clap in StartScreen.py connects kivy object to python.
     def enter(self):
         print(f"Thread Count {threading.active_count()}")
         Thread(target=self.enter_thread, daemon=True).start()
@@ -35,19 +36,19 @@ class StartScreen(Screen):
                 sleep(0.01)
                 if camera.summon_ball:
                     print('summoning ball')
-                    pumps.pump()
-                    sleep(4) #was2
-                    Clock.schedule_once(self.transition)
+                    pumps.pump()  # allows to pump alternate pumps, regardless of program shutdowns and physical project errors like ball getting stuck.
+                    sleep(4) # sleep a bit
+                    Clock.schedule_once(self.transition)  # allows you to break out the the thread into the main kivy things to execute switch screen cleanly.
                     break
             except NameError:
                 pass
         print("Exiting Start Thread")
 
     def transition(self, dt):
-        SCREEN_MANAGER.current = PLAY_SCREEN_NAME
+        SCREEN_MANAGER.current = PLAY_SCREEN_NAME  # switch screen
 
 
-class PlayScreen(Screen):
+class PlayScreen(Screen):  # starts a timer and allows user to control the motor until the exit sensor is tripped.
     timer_button = ObjectProperty(None)
     def enter(self):
         self.timer_button.text = ""
@@ -79,7 +80,7 @@ class PlayScreen(Screen):
                 break
 
     def transition(self, dt):
-        SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME
+        SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME # skips TypeScreen haha
 
 
 class TypeScreen(Screen):
@@ -174,7 +175,7 @@ class TypeScreen(Screen):
     def transition(self):
         SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME
 
-class LeaderboardScreen(Screen):
+class LeaderboardScreen(Screen): # not actually a real leaderboard, just says thanks for playing and loops back to the start after some seconds.
     leaderboard = ObjectProperty(None)
     leaderboard_greeting = ObjectProperty(None)
 
@@ -211,8 +212,8 @@ class LeaderboardScreen(Screen):
     def transition(self, dt):
         SCREEN_MANAGER.current = START_SCREEN_NAME
 
-
-Builder.load_file('Screens/StartScreen.kv')
+ #loads all of the files and makes sure that the SCREEN_MANAgER is aware of them
+Builder.load_file('Screens/StartScreen.kv') 
 Builder.load_file('Screens/PlayScreen.kv')
 Builder.load_file('Screens/TypeScreen.kv')
 Builder.load_file('Screens/LeaderboardScreen.kv')
