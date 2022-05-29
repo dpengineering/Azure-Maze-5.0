@@ -1,7 +1,7 @@
 # Azure-Maze-5.0
 Kinetic Maze with Azure Kinect and Python Library
 
-Note that this is a Dos Pueblos Engineering Academy project, and it is assumed that this project is running with DPEA pre-configured hardware/software (specifically the [RaspberryPiCommon]([url](https://github.com/dpengineering/RaspberryPiCommon)) and assocatiated packages).
+Note that this is a Dos Pueblos Engineering Academy project, and it is assumed that this project is running with DPEA pre-configured hardware/software, specifically [RaspberryPiCommon](https://github.com/dpengineering/RaspberryPiCommon), and assocatiated engineering packages.
 
 
 
