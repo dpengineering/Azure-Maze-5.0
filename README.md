@@ -42,7 +42,10 @@ To launch the Azure Kinect Viewer, run `k4aviewer` in the command line. A window
 ## How to Run ##
 
 To start the project, clone this repo or download directly.
+Navigate to final/imports and open all three files.
+Make sure that all the imported packages are downloaded correctly. Make sure to keep kivy specific imports seperate from the other packages, as it will try to open up a starter window automatically if you import kivy_imports.py along with imports.py and ODrive_Ease_Lib.py.
 
+Great! Now head over to final/maze/main_keyboardless.py and run that file. Head over to the back of the project and disconnect the motor from interacting with the wheel. The odrive will start to calibrate. Wait until it finishes calibrating - it will start to spin in only one direction, which means that it is homing. TODO: set Odrive to precalibrated `odrv0.axis0.motor.config.pre_calibrated`.
 
 
 
