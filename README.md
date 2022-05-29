@@ -1,9 +1,17 @@
 # Azure-Maze-5.0
 **Kinetic Maze with Azure Kinect and Python Library [IMPORTANT](https://github.com/ibaiGorordo/pyKinectAzure)
 **
-Note that this is a Dos Pueblos Engineering Academy project, and it is assumed that this project is running with DPEA pre-configured hardware/software, specifically [RaspberryPiCommon](https://github.com/dpengineering/RaspberryPiCommon), and associated engineering packages. You have probably learned about this already.
 
 
+Note that this is a Dos Pueblos Engineering Academy project, and it is assumed that this project is running with DPEA pre-configured hardware/software, specifically [RaspberryPiCommon](https://github.com/dpengineering/RaspberryPiCommon), and associated engineering packages. You have probably learned about this already, but just in case. Github Dark Dimmed theme for the win!
+
+I highly recommend 'blind coding', or prepping tidbits or entire sections of code that don't need the project's hardware to run, and then adding them directly to the project. You don't need classes for this to work, as seen in [Azure-Maze-2.0](https://github.com/dpengineering/Azure-Maze-2.0), but they are really helpful.
+
+Q: What happened to 3.0 and 4.0?
+
+A: They're there on the Tuf Gaming computer in the undercarriage of the maze. Note that in there may be some code pertaining to the Mirrored Light Sculpture on there (or maybe it's on another computer...?), but please don't lose those!
+
+**please read the rest of this readme, you may have to do some steps if you aren't using the 'Tuf Gaming' computer, but take note that all specific documentation is located in the `documentation` branch of this project.
 
 ## Installation ##
 ***This is already done on the 'Tuf Gaming' Computer, situated under the circuitry in the Kinetic Maze. Skip this step if this is you.***
