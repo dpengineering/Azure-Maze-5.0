@@ -2,7 +2,7 @@ import numpy
 from datetime import datetime
 import os
 import cv2
-import pyautogui
+import pyautogui # not needed as of now
 import sys
 # from kivy.uix.button import Button
 # Email stuff
@@ -14,8 +14,8 @@ from pykinect_azure.k4a import _k4a
 from final.imports.ODrive_Ease_Lib import *
 from time import sleep
 # uiStuff
-import datetime
-import random
+import datetime # not needed as of now
+import random # not needed as of now
 from pyautogui import *
 import time
 # from kivy.properties import ObjectProperty
