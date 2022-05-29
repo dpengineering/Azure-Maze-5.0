@@ -41,8 +41,6 @@ To check that your Kinect is properly recognized, run
 AzureKinectFirmwareTool -q
 ```
 
-
-**## Azure Kinect on Linux ##**
 As most Microsoft documentation is windows based, Linux usage will be documented as thoroughly as possible for future use. In general, follow instructions in the Microsoft documentation.
 
 To launch the Azure Kinect Viewer, run `k4aviewer` in the command line. A window will pop up from the terminal. Hit 'start' to verify that the camera is working.
