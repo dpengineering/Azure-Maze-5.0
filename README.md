@@ -49,7 +49,7 @@ Now sit back and wait for TWO windows to pop up, and then left justify the camer
 
 How the project works currently: 
 
-Joints: x,y,z, measured in mm from the lens of the camera.
+Joints: x, y, z, measured in mm from the lens of the camera. Make sure you know the orientation of each axis... which direction for x, y ,z is positive and negative.
 
 It calculates the slope (like you learned in math class) between your left and right hands. Based on whether the slope is positive, negative, or close to flat, the Odrive will spin the wheel clockwise, counterclockwise, or stop. 
 The motor currently brakes by setting its current velocity to negative what the encoder reads. This allows the wheel to stop with some momentum included - it is more responsive this way.
