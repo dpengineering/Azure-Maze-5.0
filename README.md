@@ -123,3 +123,6 @@ TODO: add a current 'position' image to the kivy PlayScreen.kv and main_keyboard
 [Body Tracking SDK Reference](https://microsoft.github.io/Azure-Kinect-Body-Tracking/release/1.x.x/index.html)
 
 [Azure Kinect Sensor SDK Reference](https://microsoft.github.io/Azure-Kinect-Sensor-SDK/master/index.html)
+
+
+## Note ##
