@@ -1,50 +1,53 @@
-from final.imports.imports import *
+from final.imports.imports import * # import what is needed and more :)
 
 class OdriveMotor:
-    def __init__(self, odrive_serial_number = "207C34975748", current_limit=15, velocity_limit=7):
-        print("OdriveMotor Connecting: DO NOT CALIBRATE UNDER LOAD< DO NOT DELETE THIS REMINDER< ")
+    def __init__(self, odrive_serial_number = "207C34975748", current_limit=15, velocity_limit=7): # default parameters upon initialization.
+        print("OdriveMotor Connecting: DO NOT CALIBRATE UNDER LOAD< DO NOT DELETE THIS REMINDER< ") # perm reminder to disconnect the motor from any load or tension when calibrating (youll hear a loud beep)
+        # i had that CONTROLLER_ERROR_SPINOUT_DETECTED error for like a week and couldn't figure it out, and it was not great :(
         self.serial_number = odrive_serial_number
         self.current_limit = current_limit
         self.velocity_limit = velocity_limit
         self.is_homed = False
         self.watchdog_sleep = 0.5
         self.odrive_board = odrive.find_any(serial_number=self.serial_number)
-        self.ax = ODrive_Axis(self.odrive_board.axis0, self.current_limit, self.velocity_limit)
-        self.ax.axis.config.enable_watchdog = False
+        self.ax = ODrive_Axis(self.odrive_board.axis0, self.current_limit, self.velocity_limit) # what actually is created from the init
+        #watchdog setup
+        self.ax.axis.config.enable_watchdog = False 
         self.ax.axis.error = 0
         self.ax.axis.config.watchdog_timeout = self.watchdog_sleep
-        self.homing_sensor = -7
-        self.ball_enter_sensor = -9
-        self.ball_exit_sensor = -8
-        self.homing_sensor_tripped = False
-        self.ball_enter_sensor_tripped = False
-        self.ball_exit_sensor_tripped = False
-        self.ax.clear_errors()
-        self.kinect_motor_calibrate()
-        self.check_switches_constantly()
-        self.home_maze()
+        
+        self.homing_sensor = -7 # sets gpio pin 
+        self.ball_enter_sensor = -9 # sets gpio pin
+        self.ball_exit_sensor = -8 # sets gpio pin
+        self.homing_sensor_tripped = False # sets boolean associated with gpio pin
+        self.ball_enter_sensor_tripped = False # sets boolean associated with gpio pin
+        self.ball_exit_sensor_tripped = False # sets boolean associated with gpio pin
+        self.ax.clear_errors() # clears errors 
+        self.kinect_motor_calibrate() # calibrates!! disconnect motor from wheel if you hear a beep, or see "calibrating wheel ... " in the print log.
+        self.check_switches_constantly() # starts a thread that is constantly monitoring switches
+        self.home_maze() # homes the maze
 
-        # dump_errors(self.odrive_board)
+        # dump_errors(self.odrive_board) # dumps errors of the board.
 
     def home_maze(self):
         # self.ax.home_with_endstops(vel=0.1)
         # velocity = 2
-        self.ax.set_vel(1)
+        self.ax.set_vel(1) # rotate
         while True:
             # print(int(bin(self.odrive_board.get_gpio_states())[-7]) == 0)
             if int(bin(self.odrive_board.get_gpio_states())[-7]) == 0:
-                self.ax.set_home()
+                self.ax.set_home() # sets home when pin crossed
                 break
-        self.ax.set_ramped_vel(0, 2)
-        while self.ax.is_busy():
+        self.ax.set_ramped_vel(0, 2) # stop with deaccel of 2
+        while self.ax.is_busy(): # ensures no else motor movement while this occurs.
             sleep(1)
 
-        self.ax.set_pos_traj(-3.11, 0.3, 2, 1) # pos, accel, deaccel, home
+        self.ax.set_pos_traj(-3.11, 0.3, 2, 1) # pos, accel, deaccel, home # this is as close to true home as could get it
         sleep(1)
         while self.ax.is_busy():
             sleep(1)
 
-        self.is_homed = True
+        self.is_homed = True # variable to True
         print('homed')
 
 
@@ -57,9 +60,9 @@ class OdriveMotor:
             self.ax.idle()
             dump_errors(self.odrive_board)
 
-    def check_sensors(self):
+    def check_sensors(self): # checks all the switches and homing.
         states = bin(self.odrive_board.get_gpio_states())
-        if int(states[self.homing_sensor]) == 0:
+        if int(states[self.homing_sensor]) == 0: # don't think this is used anymore, but keep it unless absolutley certain ig
             self.homing_sensor_tripped = True
 
         if int(states[self.ball_exit_sensor]) == 0:
@@ -70,7 +73,7 @@ class OdriveMotor:
             self.ball_enter_sensor_tripped = True
             self.ball_exit_sensor_tripped = False
 
-    def check_switches_constantly(self):
+    def check_switches_constantly(self): # thread caller
         Thread(target=self.check_constantly_thread, daemon=True).start()
 
     def check_constantly_thread(self):
@@ -80,7 +83,7 @@ class OdriveMotor:
             self.check_sensors()
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # for debugging, should home the maze, and then idle the motor, which may not truly home because the wheel is not uniformly weighted
     sleep(3)
     kinect_motor = OdriveMotor(odrive_serial_number = "207C34975748", current_limit=20, velocity_limit=5)
     try:
@@ -88,8 +91,8 @@ if __name__ == '__main__':
         kinect_motor.home_maze()
 
     finally:
-        kinect_motor.ax.idle()
-        dump_errors(kinect_motor.odrive_board)
+        kinect_motor.ax.idle() # idle
+        dump_errors(kinect_motor.odrive_board) # dump errors
     # try:
     #     kinect_motor.ax.set_vel(2)
     #     sleep(12)
@@ -111,7 +114,10 @@ if __name__ == '__main__':
 
 
 
+    
+
 '''
+irrelecant stuff that doesn't really need attention, but just please remember once again to not calibrate the motor under load.
 search path to fix CONTROLLER_ERROR_SPINOUT_DETECTED or MOTOR VOLTAGE ATTACHED
 also change velocity limit, increase it probably
 this is because encoder (or something) spins out of control for a fraction of a second,
