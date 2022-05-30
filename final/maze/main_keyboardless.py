@@ -168,7 +168,7 @@ class TypeScreen(Screen):
             with open("leaderboard.txt", "a") as f:
                 f.write(score + " ")
                 f.write(self.nickname.text + "\n")
-            self.transition()
+            self.transition() # could also do Clock.schedule_one(self.transition, 1) and make transition() of transition(self, dt)
         else:
             self.nickname.text = "Not A Name!"
 
@@ -182,7 +182,7 @@ class LeaderboardScreen(Screen): # not actually a real leaderboard, just says th
     def enter(self):
         self.score_update()
 
-    def score_update(self):
+    def score_update(self): # reads the text file left and right columns by score, name, and then sorts them to one string.
         scores = []
         names = []
         with open("leaderboard.txt", "r") as file:
