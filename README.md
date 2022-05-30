@@ -89,6 +89,7 @@ main.py: runs through each screen of Screens, currently is bugged. some useful c
 
 the **classes** housed in final that are used are in maze_arduino.py, maze_camera.py, and maze_motor.py. maze_timer.py works, but is not used.
 
+**_Note: all classes have testing in the if __name__ == "__main__": part, so if something is not working, try to run these files individually_**
 
 maze_arduino.py: connects to the arduino upon initialization and controls the pumps.
 
