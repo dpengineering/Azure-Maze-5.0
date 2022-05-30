@@ -137,4 +137,4 @@ Establish a 'your area'. Seperate from everyone else, or with a partner or two. 
 
 At the end of the day, it is what you make of it. You can literally do almost nothing if you try to. But don't! It's your senior year, and you've come a long way. Establish and maintain trust. Joke, and laugh. Type so much that your fingertips hurt. Have respect for everyone, but don't care about that if it gets in the way helping someone. If you learn html or css and want to take it futher, make your own website using github. See [mine](https://nikhi1g.github.io/)! Make it fun! See some eggcellent puns on the one and only [thedailyegg!](https://thedailyegg.github.io/)
 
-**If you have any questions about the maze or the code or whatever please contact me at `805 455 5199`. If I don't pick up, text "Azure-Maze" to me along with your question so you don't get blocked. Email is 2nikhil@gmail.com**
+**If you have any questions about the maze or the code or whatever please contact me at `805 455 5199`. If I don't pick up, text "Azure-Maze" to me along with your question so you don't get blocked. Email is 2nikhilg@gmail.com**
