@@ -106,7 +106,7 @@ testingjunk.py: coding scratchpad for ideas. was currently working on speech-to-
 
 TODO: set Odrive to precalibrated `odrv0.axis0.motor.config.pre_calibrated`.
 
-TODO: make one beautiful, 'full-screen' version of the project that has the camera output built into it, instead of a seperate window. 
+TODO: make one beautiful, 'full-screen' version of the project that has the camera output built into it, instead of a separate window. 
 Look into [Gantry Game GUI](https://github.com/dpengineering/GantryGame3.0/blob/Main/Picasso_Bot_Gui.py) and the original [Picasso Bot GUI](https://github.com/nikhi1g/Picasso_Bot_Gui/blob/main/Picasso_Bot_Gui.py), and of course Google!
 
 TODO: add a current 'position' image to the kivy PlayScreen.kv and main_keyboardless.py where it displays the action figure of what the person is doing. You can accomplish this with self.movement_text, or directly from hand_slope with linked variables.
