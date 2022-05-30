@@ -5,7 +5,7 @@
 
 Note that this is a Dos Pueblos Engineering Academy project, and it is assumed that this project is running with DPEA pre-configured hardware/software, specifically [RaspberryPiCommon](https://github.com/dpengineering/RaspberryPiCommon), and associated engineering packages. You have probably learned about this already, but just in case. Github Dark Dimmed theme for the win!
 
-I highly recommend 'blind coding', or prepping tidbits or entire sections of code that don't need the project's hardware to run, and then adding them directly to the project. You don't need classes for this to work, as seen in [Azure-Maze-2.0](https://github.com/dpengineering/Azure-Maze-2.0), but they are really helpful.
+I highly recommend 'blind coding', or prepping tidbits or entire sections of code that don't need the project's hardware to run, and then adding them directly to the project. You don't need classes for this to work, as seen in [Azure-Maze-2.0](https://github.com/dpengineering/Azure-Maze-2.0), but they are really helpful. The first version of this project can be found [here](https://github.com/dpengineering/azure-maze).
 
 Q: What happened to 3.0 and 4.0?
 
