@@ -82,7 +82,7 @@ from final/maze/main.py.
 final/maze/maze_arduino.txt: stores the last direction pumped, so that the project never gets unevenly stacked with the pool balls.
 
 
-main.py: runs through each screen of Screens, currently is bugged.
+main.py: runs through each screen of Screens, currently is bugged. some useful code for an emulated keyboard, [here](https://github.com/nikhi1g/blind_keyboard).
 
 **main_keyboardless.py:** runs without keyboard or leaderboard, and runs very smoothly. there is only one issue with the Arduino sometimes not working when the user wants it to pump a ball.
 
