@@ -34,10 +34,10 @@ class StartScreen(Screen):
         while True:
             try:
                 sleep(0.01)
-                if camera.summon_ball:
+                if camera.summon_ball: # summon ball variable which is found in the Kinect() class
                     print('summoning ball')
                     pumps.pump()  # allows to pump alternate pumps, regardless of program shutdowns and physical project errors like ball getting stuck.
-                    sleep(4) # sleep a bit
+                    sleep(4) # sleep a bit before doing anything else, to make sure pumps move
                     Clock.schedule_once(self.transition)  # allows you to break out the the thread into the main kivy things to execute switch screen cleanly.
                     break
             except NameError:
@@ -54,7 +54,7 @@ class PlayScreen(Screen):  # starts a timer and allows user to control the motor
         self.timer_button.text = ""
         Thread(target=self.timer, daemon=True).start()
 #revert toyes commit
-    def timer(self):
+    def timer(self): # simple timer
         global score
         self.timer_button.text = "Ready"
         time.sleep(7)
@@ -83,7 +83,7 @@ class PlayScreen(Screen):  # starts a timer and allows user to control the motor
         SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME # skips TypeScreen haha
 
 
-class TypeScreen(Screen):
+class TypeScreen(Screen): # keyboard, with associated objects and functions. doesn't get called anywhere as main_keyboardless.py is without keyboard.
     a1 = ObjectProperty(None)
     b1 = ObjectProperty(None)
     c1 = ObjectProperty(None)
@@ -129,7 +129,7 @@ class TypeScreen(Screen):
                 break
             sleep(0.25)
 
-    def set_keyboard_keys(self):
+    def set_keyboard_keys(self): # you may want to copy just this class and test it somewhere else as it is very clean in of itself as a standalone keyboard.
         KeyboardObjectList = [self.q1, self.w1, self.e1, self.r1, self.t1, self.y1, self.u1, self.i1, self.o1, self.p1,
                               self.a1, self.s1, self.d1, self.f1, self.g1, self.h1, self.j1, self.k1, self.l1,
                               self.space,
