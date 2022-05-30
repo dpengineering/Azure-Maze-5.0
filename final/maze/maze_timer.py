@@ -1,5 +1,5 @@
 from final.imports.imports import *
-
+# timer here should be pretty simple. I haven't really used this class I made, but the code is clean so you can use it ig, but it's not needed for this project.
 
 class Timer:
     def __init__(self):
