@@ -5,13 +5,21 @@
     movement_text: movement_text
 
     name: 'play'
+
+    Widget:
+        canvas:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'maze_ui_background.png'
+
     FloatLayout:
         size_hint: None, None
 
     DPEAButton:
         id: timer_button
         text: ''
-        size: 700, 700
+        size: 650, 650
         center_x: root.width * 0.5
         center_y: root.height * 0.5
         color: 0.1, 0.1, 0.1, 1
@@ -23,11 +31,13 @@
         source: 'images/right.png'
         size_hint: 0.5, 0.5
         center_x: self.width * 0.2
+        keep_ratio: True
     ImageButton:
         id: left
         source: 'images/left.png'
         size_hint: 0.5, 0.5
         center_x: self.width * 1.8
+        keep_ratio: True
 
     Label:
         id: movement_text

@@ -8,8 +8,6 @@ class Ball_Pump:
             start_orientation = str(f.readline())
         self.orientation = start_orientation
 
-
-
     # def log_new_position(self):
     #     with open("maze_arduino.txt", "r+") as f:
     #         if str(f.readline()) == "right":
@@ -35,6 +33,12 @@ class Ball_Pump:
                 f.write("left")
             self.orientation = "left"
 
+    def pump_left(self):
+        x = True
+        while x:
+            self.pump_left_once()
+            sleep(3)
+
     def change_pump(self, pump_num):
         """
             0 for right, 1 for left
@@ -53,9 +57,13 @@ class Ball_Pump:
 
     def start_left_pump(self):
         self.change_pump(1)
+        # self.board.digital[4].write(1)
+        # self.board.digital[3].write(0)
 
     def start_right_pump(self):
         self.change_pump(0)
+        # self.board.digital[4].write(0)
+        # self.board.digital[3].write(1)
 
     def stop_pumps(self):
         self.board.digital[4].write(0)
@@ -70,6 +78,12 @@ class Ball_Pump:
         self.start_right_pump()
         sleep(1)
         self.stop_pumps()
+
+    def piston_on(self):
+        self.board.digital[10].write(1)
+
+    def piston_off(self):
+        self.board.digital[10].write(0)
 
 
 if __name__ == '__main__':

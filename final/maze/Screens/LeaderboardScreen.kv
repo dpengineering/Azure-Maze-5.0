@@ -6,21 +6,39 @@
     leaderboard: leaderboard
     leaderboard_greeting: leaderboard_greeting
     name: 'leader'
+
+    Widget:
+        canvas:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'maze_ui_background.png'
+
     FloatLayout:
         size_hint: None, None
 
     Label:
-        id: leaderboard
-        text: 'To StartScreen'
-        font_size: 30
-        size: 100, 100
-        pos_hint:{"x":0,"y": -0.13}
-        color: 0.3, 0.3, 0.3, 1
+        id: title
+        # text: 'User | Time'
+        # font_size: 40
+        size: self.size
+        background_normal: 'maze_leaderboard.png'
+        pos_hint:{"x":0, "y":0.3}
+        color: 0, 0, 1, 1
 
     Label:
-        id: leaderboard_greeting
-        text: 'Top 10 Scorers'
-        font_size: 90
-        size: 100, 100
-        pos_hint:{"x":0,"y": 0.4}
-        color: 0.3, 0.3, 0.3, 1
+        id: leaderboard
+        text: ''
+        font_size: 50
+        # size: 100, 500
+        pos_hint:{"x":0, "y":-0.1}
+        color: 1, 1, 1, 1
+        #on_press: root.enter()
+
+    #Label:
+        #id: leaderboard_greeting
+        #text: 'Thank you for playing!'
+        #font_size: 70
+        # size: 150, 150
+        #pos_hint:{"x":0,"y": 0.1}
+        #color: 0.6, 0.3, 0.6, 1

@@ -1,4 +1,7 @@
 from final.imports.imports import *
+from final.maze.maze_arduino import *
+
+arduino = Ball_Pump()
 
 class OdriveMotor:
     def __init__(self, odrive_serial_number = "207C34975748", current_limit=15, velocity_limit=7):
@@ -35,11 +38,12 @@ class OdriveMotor:
             if int(bin(self.odrive_board.get_gpio_states())[-7]) == 0:
                 self.ax.set_home()
                 break
+                
         self.ax.set_ramped_vel(0, 2)
         while self.ax.is_busy():
             sleep(1)
 
-        self.ax.set_pos_traj(-3.11, 0.3, 2, 1) # pos, accel, deaccel, home
+        self.ax.set_pos_traj(-3.00, 0.3, 2, 1) # pos, accel, deaccel, home
         sleep(1)
         while self.ax.is_busy():
             sleep(1)
@@ -50,12 +54,15 @@ class OdriveMotor:
 
 
     def kinect_motor_calibrate(self):
-        if not self.ax.is_calibrated():
-            print("calibrating wheel ... ")
-            self.ax.calibrate()
-            self.ax.gainz(20, 0.16, 0.32, False)
-            self.ax.idle()
-            dump_errors(self.odrive_board)
+        # if not self.ax.is_calibrated():
+        print("calibrating wheel ... ")
+        arduino.piston_on()
+        self.ax.calibrate()
+        sleep(2)
+        arduino.piston_off()
+        self.ax.gainz(20, 0.16, 0.32, False)
+        self.ax.idle()
+        dump_errors(self.odrive_board)
 
     def check_sensors(self):
         states = bin(self.odrive_board.get_gpio_states())
@@ -84,7 +91,8 @@ if __name__ == '__main__':
     sleep(3)
     kinect_motor = OdriveMotor(odrive_serial_number = "207C34975748", current_limit=20, velocity_limit=5)
     try:
-        # kinect_motor.ax.set_vel(2)
+        # kinect_motor.ax.set_vel(5)
+        dump_errors(kinect_motor.odrive_board)
         kinect_motor.home_maze()
 
     finally:
@@ -102,7 +110,7 @@ if __name__ == '__main__':
     #     # kinect_motor.home_maze()
     #     # kinect_motor.kinect_motor_calibrate()
     #     # sleep(1)
-    #     kinect_motor.ax.set_vel(1)
+    #     kinect_motor.ax.set_vel(4)
     #     sleep(10)
     # finally:
     #     dump_errors(kinect_motor.odrive_board)

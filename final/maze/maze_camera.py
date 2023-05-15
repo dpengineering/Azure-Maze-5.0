@@ -27,6 +27,7 @@ class Kinect:
         self.time = 0
 
         self.movement_text = ""
+        self.recognized_body = False
 
         self.summon_ball = False
 
@@ -66,9 +67,19 @@ class Kinect:
         # new
         self.combined_image = cv2.cvtColor(self.combined_image, cv2.COLOR_BGR2RGB)
 
-        self.combined_image = cv2.putText(self.combined_image, self.movement_text, (50, 50),
+        self.combined_image = cv2.putText(self.combined_image, self.movement_text, (100, 100),
                                           cv2.FONT_HERSHEY_SIMPLEX,
                                           1, (255, 0, 0), 2, cv2.LINE_AA)
+        # if self.recognized_body:
+        #
+        #     self.combined_image = cv2.putText(self.combined_image, "player recognized", (100, 400),
+        #                                       cv2.FONT_HERSHEY_SIMPLEX,
+        #                                       1, (255, 0, 0), 2, cv2.LINE_AA)
+        # if not self.recognized_body:
+        #
+        #     self.combined_image = cv2.putText(self.combined_image, "step closer to play", (100, 400),
+        #                                       cv2.FONT_HERSHEY_SIMPLEX,
+        #                                       1, (255, 0, 0), 2, cv2.LINE_AA)
 
         if showImage:
             cv2.imshow('Depth image with skeleton', self.combined_image)
@@ -85,11 +96,12 @@ class Kinect:
             head_z = body_skel.joints[K4ABT_JOINT_NAMES.index("head")].position.xyz.z
             head_z_values.append(head_z)
         for body_index in range(self.body_frame.get_num_bodies()):
-            if head_z_values[body_index] > 4500:
+            if head_z_values[body_index] > 3000: # was 3500
                 head_x_values[body_index] = 10000
         if len(head_x_values) > 0:
             closest_body_skel = self.body_frame.get_body_skeleton(head_x_values.index(min(head_x_values)))
             head_depth_z = closest_body_skel.joints[K4ABT_JOINT_NAMES.index("head")].position.xyz.z
+
             joint_names = ["nose", "right shoulder", "left shoulder", "left knee", "right knee"]
             joints_out_of_bounds = [closest_body_skel.joints[K4ABT_JOINT_NAMES.index(name)].position.xyz.x == 0 for name
                                     in joint_names]
@@ -97,6 +109,7 @@ class Kinect:
                 self.close_body = None
             else:
                 self.close_body = closest_body_skel
+
         else:
             self.close_body = None
 
@@ -117,7 +130,7 @@ class Kinect:
     def type_on_frame(self, text: str):
         self.combined_image = cv2.cvtColor(self.combined_image, cv2.COLOR_BGR2RGB)
 
-        self.combined_image = cv2.putText(self.combined_image, text, (50,50),
+        self.combined_image = cv2.putText(self.combined_image, text, (100, 100),
                                           cv2.FONT_HERSHEY_SIMPLEX,
                                           1, (255, 0, 0), 2, cv2.LINE_AA)
 
@@ -146,7 +159,7 @@ class Kinect:
                         self.motor.ax.axis.error = 0
                         self.motor.ax.axis.config.enable_watchdog = True
 
-                    vel = float(int(self.generate_points("head").z)) / 1900  # changed back after presentation
+                    vel = float(int(self.generate_points("head").z)) / 1100  # changed back after presentation
 
                     hand_left_y = self.generate_points("left hand").y
                     hand_right_y = self.generate_points("right hand").y
@@ -160,6 +173,7 @@ class Kinect:
                     head_z = self.generate_points("head").z
 
                     hand_slope = (hand_left_y - hand_right_y) / (hand_left_x - hand_right_x)
+
 
                     head_x = self.generate_points("head").x
                     head_y = self.generate_points("head").y
@@ -193,16 +207,16 @@ class Kinect:
                     if self.motor.ball_enter_sensor_tripped:
                         # print("entered")
                         if -0.2 < hand_slope < 0.2:
-                            self.movement_text = "stopping"
+                            self.movement_text = "Stopping"
                             self.motor.ax.set_vel(-(self.motor.ax.get_vel()))
                         if abs(vel) <= 2 and self.summon_ball:
                             if hand_slope > 0.2:  # left
-                                self.movement_text = "lefting"
+                                self.movement_text = "Counterclockwise"
                                 self.motor.ax.set_vel(vel)
 
                             if hand_slope < -0.2:  # right
                                 self.motor.ax.set_vel(-vel)
-                                self.movement_text = "righting"
+                                self.movement_text = "Clockwise"
 
                         if hand_right_x < -700 or hand_right_x > 700:
                             self.motor.ax.set_ramped_vel(0, 2)

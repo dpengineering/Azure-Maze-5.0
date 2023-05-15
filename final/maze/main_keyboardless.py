@@ -6,12 +6,13 @@ from final.maze.maze_arduino import *
 
 camera = Kinect()
 pumps = Ball_Pump()
+
 SCREEN_MANAGER = ScreenManager()
 START_SCREEN_NAME = 'start'
 PLAY_SCREEN_NAME = 'play'
 TYPE_SCREEN_NAME = 'type'
 LEADERBOARD_SCREEN_NAME = 'leader'
-
+CAMERA_SCREEN_NAME = 'camera'
 
 
 
@@ -36,7 +37,9 @@ class StartScreen(Screen):
                 if camera.summon_ball:
                     print('summoning ball')
                     pumps.pump()
-                    sleep(4) #was2
+                    #pumps.pump_left()
+                    #pumps.pump_left_once()
+                    sleep(4)
                     Clock.schedule_once(self.transition)
                     break
             except NameError:
@@ -45,6 +48,8 @@ class StartScreen(Screen):
 
     def transition(self, dt):
         SCREEN_MANAGER.current = PLAY_SCREEN_NAME
+        # SCREEN_MANAGER.current = TYPE_SCREEN_NAME
+        #pass
 
 
 class PlayScreen(Screen):
@@ -55,31 +60,34 @@ class PlayScreen(Screen):
 #revert toyes commit
     def timer(self):
         global score
-        self.timer_button.text = "Ready"
-        time.sleep(7)
-        self.timer_button.text = "Three"
-        time.sleep(1)
-        self.timer_button.text = "Two"
-        time.sleep(1)
-        self.timer_button.text = "One"
-        time.sleep(1)
-        self.timer_button.text = "Go!!!"
+        self.timer_button.text = "Ready?"
+        time.sleep(3) # was 7?
+        self.timer_button.text = "3"
+        sleep(1)
+        self.timer_button.text = "2"
+        sleep(1)
+        self.timer_button.text = "1"
+        sleep(1)
+        self.timer_button.text = "Go!"
         time.sleep(1.3)
-        base_time = time.time()
+        score = 0
         while True:
             # restart to here
             print(self.movement_text.text)
-            c_time = time.time()
-            score = int(c_time - base_time)
-            score = str(score)
-            sleep(1) # was 1, change back if lag or error
-            self.timer_button.text = score
+            score += 1
+            sleep(1)
+            self.timer_button.text = str(score)
             if camera.motor.ball_exit_sensor_tripped:
                 Clock.schedule_once(self.transition)
                 break
 
     def transition(self, dt):
-        SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME
+        # SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME
+        SCREEN_MANAGER.current = LEADERBOARD_SCREEN_NAME # testing type screen
+        # pass
+
+# class CameraScreen(Screen):
+
 
 
 class TypeScreen(Screen):
@@ -129,10 +137,10 @@ class TypeScreen(Screen):
             sleep(0.25)
 
     def set_keyboard_keys(self):
-        KeyboardObjectList = [self.q1, self.w1, self.e1, self.r1, self.t1, self.y1, self.u1, self.i1, self.o1, self.p1,
-                              self.a1, self.s1, self.d1, self.f1, self.g1, self.h1, self.j1, self.k1, self.l1,
+        KeyboardObjectList = [self.a1, self.b1, self.c1, self.d1, self.e1, self.f1, self.g1, self.h1, self.i1, self.j1,
+                              self.k1, self.l1, self.m1, self.n1, self.o1, self.p1, self.q1, self.r1, self.s1,
                               self.space,
-                              self.z1, self.x1, self.c1, self.v1, self.b1, self.n1, self.m1, self.star, self.dash,
+                              self.t1, self.u1, self.v1, self.w1, self.x1, self.y1, self.z1, self.star, self.dash,
                               self.delete, self.enterKey]
         x_spacing = .1
         y_spacing = -.15
@@ -165,7 +173,7 @@ class TypeScreen(Screen):
     def Enter_Key_Update(self):
         if len(self.nickname.text) >= 1 and ":" not in self.nickname.text:
             with open("leaderboard.txt", "a") as f:
-                f.write(score + " ")
+                f.write(str(score) + " ")
                 f.write(self.nickname.text + "\n")
             self.transition()
         else:
@@ -180,6 +188,7 @@ class LeaderboardScreen(Screen):
 
     def enter(self):
         self.score_update()
+        sleep(5)
 
     def score_update(self):
         scores = []
@@ -197,18 +206,25 @@ class LeaderboardScreen(Screen):
         with open("leaderboard.txt", "r") as f:
             leader_length = len(f.readlines())
 
-        while count < leader_length and count <= 10:
-            score_board += str(count) + ".        " + pairs[count][0] + " " + pairs[count][1] + "\n"
-            count += 1
+        print(scores)
+        print(names)
+
+        score_board += "Score: " + str(score) + " seconds"
+
+        #while count <= leader_length and count <= 10:
+            #score_board += str(count) + ". " + pairs[count][1] + ": " + pairs[count][0] + " seconds\n"
+            #count += 1
 
         self.leaderboard.text = score_board
-        Clock.schedule_once(self.transition, 5)
-        # that took way too long
-        self.leaderboard.text = ""
-        self.leaderboard_greeting.text = "Thank you\nfor playing!"
-
+        Clock.schedule_once(self.transition, 0)
+        # sleep(1)
+        # # that took way too long
+        # self.leaderboard.text = "" # work?
+        # sleep(5)
+        # self.leaderboard_greeting.text = "Thank you\nfor playing!"
 
     def transition(self, dt):
+        sleep(7)
         SCREEN_MANAGER.current = START_SCREEN_NAME
 
 

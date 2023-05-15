@@ -33,19 +33,33 @@
     dash:dash
     enterKey:enterKey
     nickname: nickname
+    bar: bar
+    cursor: cursor
 
     name: 'type'
+
+    Widget:
+        canvas:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'maze_ui_background.png'
+
     FloatLayout:
         size_hint: None, None
 
-    DPEAButton:
-        id: test_button
-        text: 'To LeaderboardScreen'
-        size: 100, 100
-        x: root.width * 0.75
-        y: root.height * 0.1
-        color: 0, 0, 0, 1
-        on_press: root.transition()
+    ImageButton:
+        id: bar
+        source:'images/bar.png'
+        size_hint: 0.1921144, .029
+        pos_hint:{"x":.0215,"y": .154}
+
+    ImageButton:
+        id: cursor
+        source:'images/cursor.png'
+        size_hint: 0.075, 0.8
+        pos_hint:{"x":.90,"y": .9}
+
 
     Label:
         id: nickname

@@ -4,14 +4,20 @@
     clap: clap
 
     name: 'start'
+    Widget:
+        canvas:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'maze_ui_background.png'
     FloatLayout:
         size_hint: None, None
 
     DPEAButton:
         id: test_button
-        text: 'Jumping Jacks\n to start!!!'
+        text: 'Raise hands over head to start!'
         size: 100, 100
-        x: root.width * 0.7
+        x: root.width * 0.45
         y: root.height * 0.8
         color: 0, 0, 0, 1
         on_press: root.transition()
@@ -19,8 +25,9 @@
     ImageButton:
         id: clap
         source:'images/clap.png'
-        size_hint: .7, .8
-        center_x: self.width * 0.5
+        size_hint: 0.5, .8
+        center_x: self.width * 1
+        keep_ratio: True
 
 
 

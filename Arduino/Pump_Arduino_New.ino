@@ -4,8 +4,8 @@
 
 #include "SpeedyStepper.h"
 
-SpeedyStepper BallPump1;
-SpeedyStepper BallPump2;
+SpeedyStepper BallPump1; // right
+SpeedyStepper BallPump2; // left
 
 const long BALL_PUMP_1_STEPS_PER_REV = 200 * 76.766;
 const long BALL_PUMP_1_MICROSTEPPING = 8;
@@ -29,7 +29,7 @@ const byte BALL_PUMP_2_SENSOR = 29;                // Optical ball sensor
 const long BALL_PUMP_2_DIRECTION_TOWARD_HOME = 1; // -1 is CCW
 const long BALL_PUMP_2_DIRECTION = 1;             // -1 is CCW
 const long BALL_PUMP_2_MAX_STEPS = 1500000;
-const long BALL_PUMP_2_GATE = 24;
+const long BALL_PUMP_2_GATE = 24; // connected to D4
 
 bool pump1ready;
 bool pump2ready;

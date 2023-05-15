@@ -2,7 +2,8 @@ from kivy.properties import ObjectProperty
 from kivy.app import App
 from kivy.core.window import Window, Animation
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager, Screen, Screen, FadeTransition
+from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics.texture import Texture
 from kivy.graphics.texture import Texture
 from kivy.clock import Clock
@@ -14,6 +15,7 @@ from pidev.kivy.selfupdatinglabel import SelfUpdatingLabel
 from pidev.MixPanel import MixPanel
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.app import App
 from kivy.core.window import Window
@@ -30,6 +32,7 @@ import time
 import kivy.uix.button
 from kivy.app import App
 from kivy.core.window import Window
+from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
