@@ -1,4 +1,5 @@
 from final.imports.imports import *
+from dpea_p2p.server import Server
 import enum
 
 
@@ -48,27 +49,27 @@ class Server:
 
     def pump_left(self):
         self.switch(0)
-        assert s.recv_packet() == (PacketType.COMMAND0, b"left pump")
+        # assert s.recv_packet() == (PacketType.COMMAND0, b"left pump")
 
     def pump_right(self):
         self.switch(1)
-        assert s.recv_packet() == (PacketType.COMMAND1, b"right pump")
+        # assert s.recv_packet() == (PacketType.COMMAND1, b"right pump")
 
     def left_home(self):
         self.switch(2)
-        assert s.recv_packet() == (PacketType.COMMAND2, b"left home")
+        # assert s.recv_packet() == (PacketType.COMMAND2, b"left home")
 
     def right_home(self):
         self.switch(3)
-        assert s.recv_packet() == (PacketType.COMMAND3, b"right home")
+        # assert s.recv_packet() == (PacketType.COMMAND3, b"right home")
 
     def piston_on(self):
         self.switch(4)
-        assert s.recv_packet() == (PacketType.COMMAND4, b"piston on")
+        # assert s.recv_packet() == (PacketType.COMMAND4, b"piston on")
 
     def piston_off(self):
         self.switch(5)
-        assert s.recv_packet() == (PacketType.COMMAND5, b"piston off")
+        # assert s.recv_packet() == (PacketType.COMMAND5, b"piston off")
 
     def change_pumps(self, pump_num):
         if pump_num == 1:
@@ -89,3 +90,10 @@ class Server:
             self.pump_right_once()
         elif self.pump_right_once():
             self.pump_left_once()
+
+
+if __name__ == '__main__':
+    server = Server()
+    while True:
+        e = input("Enter which pump: ")
+        server.pump()
