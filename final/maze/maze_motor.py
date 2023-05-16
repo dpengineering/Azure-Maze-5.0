@@ -1,7 +1,9 @@
 from final.imports.imports import *
 from final.maze.maze_arduino import *
+from final.maze.server import *
 
-arduino = Ball_Pump()
+# arduino = Ball_Pump()
+server = Server()
 
 class OdriveMotor:
     def __init__(self, odrive_serial_number = "207C34975748", current_limit=15, velocity_limit=7):
@@ -56,10 +58,10 @@ class OdriveMotor:
     def kinect_motor_calibrate(self):
         # if not self.ax.is_calibrated():
         print("calibrating wheel ... ")
-        arduino.piston_on()
+        server.piston_on()
         self.ax.calibrate()
         sleep(2)
-        arduino.piston_off()
+        server.piston_off()
         self.ax.gainz(20, 0.16, 0.32, False)
         self.ax.idle()
         dump_errors(self.odrive_board)

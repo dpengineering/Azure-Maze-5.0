@@ -3,9 +3,11 @@ import threading
 from final.imports.kivy_imports import *
 from final.maze.maze_camera import *
 from final.maze.maze_arduino import *
+from final.maze.server import *
 
 camera = Kinect()
-pumps = Ball_Pump()
+# pumps = Ball_Pump()
+server = Server()
 
 SCREEN_MANAGER = ScreenManager()
 START_SCREEN_NAME = 'start'
@@ -40,7 +42,7 @@ class StartScreen(Screen):
                 sleep(0.01)
                 if camera.summon_ball:
                     print('summoning ball')
-                    pumps.pump()
+                    server.pump()
                     sleep(4) #was2
                     Clock.schedule_once(self.transition)
                     break
