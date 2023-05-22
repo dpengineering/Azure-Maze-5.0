@@ -3,7 +3,9 @@ from final.maze.maze_arduino import *
 from final.maze.server import *
 
 # arduino = Ball_Pump()
-server = Server()
+server = Ball_Pump()
+# serverCreated = create_server()
+
 
 class OdriveMotor:
     def __init__(self, odrive_serial_number = "207C34975748", current_limit=15, velocity_limit=7):
@@ -40,7 +42,6 @@ class OdriveMotor:
             if int(bin(self.odrive_board.get_gpio_states())[-7]) == 0:
                 self.ax.set_home()
                 break
-                
         self.ax.set_ramped_vel(0, 2)
         while self.ax.is_busy():
             sleep(1)
@@ -60,7 +61,7 @@ class OdriveMotor:
         print("calibrating wheel ... ")
         server.piston_on()
         self.ax.calibrate()
-        sleep(2)
+        sleep(5)
         server.piston_off()
         self.ax.gainz(20, 0.16, 0.32, False)
         self.ax.idle()
@@ -91,6 +92,7 @@ class OdriveMotor:
 
 if __name__ == '__main__':
     sleep(3)
+    serverCreated()
     kinect_motor = OdriveMotor(odrive_serial_number = "207C34975748", current_limit=20, velocity_limit=5)
     try:
         # kinect_motor.ax.set_vel(5)

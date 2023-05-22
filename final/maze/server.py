@@ -12,7 +12,7 @@ class PacketType(enum.Enum):
     COMMAND5 = 5
 
 
-s = Server("172.17.21.2", 5001, PacketType)
+s = Server("172.17.21.1", 5001, PacketType)
 serverCreated = False
 
 
@@ -26,11 +26,13 @@ def create_server():
     return True
 
 
-class Server:
+class Ball_Pump:
+
     def switch(self, num):
         if num == 0:
             if serverCreated is True:
                 s.send_packet(PacketType.COMMAND0, b"left pump")
+                # assert s.recv_packet() == (PacketType.COMMAND0, b"left pump")
         elif num == 1:
             if serverCreated is True:
                 s.send_packet(PacketType.COMMAND1, b"right pump")
@@ -93,7 +95,7 @@ class Server:
 
 
 if __name__ == '__main__':
-    server = Server()
+    server = Ball_Pump()
     while True:
         e = input("Enter which pump: ")
         server.pump()

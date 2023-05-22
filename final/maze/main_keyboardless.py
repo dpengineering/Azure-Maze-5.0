@@ -7,7 +7,8 @@ from final.maze.server import *
 
 camera = Kinect()
 # pumps = Ball_Pump()
-server = Server()
+server = Ball_Pump()
+# serverCreated = create_server()
 
 SCREEN_MANAGER = ScreenManager()
 START_SCREEN_NAME = 'start'
@@ -38,9 +39,7 @@ class StartScreen(Screen):
                 sleep(0.01)
                 if camera.summon_ball:
                     print('summoning ball')
-                    server.pump()
-                    #pumps.pump_left()
-                    #pumps.pump_left_once()
+                    server.pump_left()
                     sleep(4)
                     Clock.schedule_once(self.transition)
                     break
@@ -241,6 +240,7 @@ SCREEN_MANAGER.add_widget(LeaderboardScreen(name=LEADERBOARD_SCREEN_NAME))
 
 
 if __name__ == "__main__":
+    # serverCreated()
     camera.start()
     camera.motor.ax.idle()
     MazeGUI().run()
