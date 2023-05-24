@@ -39,7 +39,7 @@ class StartScreen(Screen):
                 sleep(0.01)
                 if camera.summon_ball:
                     print('summoning ball')
-                    server.pump_left()
+                    server.pump()
                     sleep(4)
                     Clock.schedule_once(self.transition)
                     break

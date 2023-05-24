@@ -28,6 +28,11 @@ def create_server():
 
 class Ball_Pump:
 
+    def __init__(self):
+        with open("maze_arduino.txt", "r") as f:
+            start_orientation = str(f.readline())
+        self.orientation = start_orientation
+
     def switch(self, num):
         if num == 0:
             if serverCreated is True:
@@ -88,10 +93,18 @@ class Ball_Pump:
         return True
 
     def pump(self):
-        if self.pump_left_once():
-            self.pump_right_once()
-        elif self.pump_right_once():
-            self.pump_left_once()
+        if self.orientation == "left":
+            self.pump_left()
+            with open("maze_arduino.txt", "w") as f:
+                f.truncate(0)
+                f.write("right")
+            self.orientation = "right"
+        elif self.orientation == "right":
+            self.pump_right()
+            with open("maze_arduino.txt", "w") as f:
+                f.truncate(0)
+                f.write("left")
+            self.orientation = "left"
 
 
 if __name__ == '__main__':
