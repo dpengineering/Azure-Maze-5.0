@@ -4,7 +4,7 @@ from final.maze.server import *
 
 # arduino = Ball_Pump()
 server = Ball_Pump()
-serverCreated = create_server()
+
 
 
 class OdriveMotor:
@@ -46,7 +46,7 @@ class OdriveMotor:
         while self.ax.is_busy():
             sleep(1)
 
-        self.ax.set_pos_traj(-3.85, 0.3, 2, 1) # pos, accel, deaccel, home
+        self.ax.set_pos_traj(-3.02, 0.3, 2, 1) # pos, accel, deaccel, home
         sleep(1)
         while self.ax.is_busy():
             sleep(1)
@@ -54,10 +54,9 @@ class OdriveMotor:
         self.is_homed = True
         print('homed')
 
-
-
     def kinect_motor_calibrate(self):
         # if not self.ax.is_calibrated():
+        server.check_server()
         print("calibrating wheel ... ")
         server.piston_on()
         self.ax.calibrate()

@@ -10,12 +10,19 @@
     FloatLayout:
         size_hint: None, None
 
+    Widget:
+        canvas:
+            Rectangle:
+                source: "images/bg.jpg"
+                size: self.size
+                pos: self.pos
+
     Label:
         id: title
-        text: 'User | Time'
-        font_size: 40
+        # text: 'User | Time'
+        # font_size: 40
         size: self.size
-        # background_normal: 'maze_leaderboard.png'
+        background_normal: 'images/maze_leaderboard.png'
         pos_hint:{"x":0, "y":0.3}
         color: 0, 0, 1, 1
 
@@ -31,7 +38,9 @@
     Label:
         id: leaderboard_greeting
         text: 'Thank you for playing!'
-        font_size: 70
-        # size: 150, 150
-        pos_hint:{"x":0,"y": 0.1}
-        color: 0.6, 0.3, 0.6, 1
+        font_size: 100
+        size: 150, 150
+        # pos_hint:{"x":0,"y": 0.1}
+        center_x: root.width * 0.5
+        center_y: root.height * 0.8
+        color: 1, 1, 1, 1

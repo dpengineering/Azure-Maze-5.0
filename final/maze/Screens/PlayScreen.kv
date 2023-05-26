@@ -9,13 +9,20 @@
     FloatLayout:
         size_hint: None, None
 
+    Widget:
+        canvas:
+            Rectangle:
+                source: "images/background'.jpg"
+                size: self.size
+                pos: self.pos
+
     DPEAButton:
         id: timer_button
         text: ''
         size: 650, 650
         center_x: root.width * 0.5
         center_y: root.height * 0.5
-        color: 0.1, 0.1, 0.1, 1
+        color: 0.7, 0.3, 0.8, 1
         on_press: root.transition()
 
 

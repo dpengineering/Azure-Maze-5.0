@@ -7,13 +7,20 @@
     FloatLayout:
         size_hint: None, None
 
+    Widget:
+        canvas:
+            Rectangle:
+                source: "images/maze_start.jpg"
+                size: self.size
+                pos: self.pos
+
     DPEAButton:
         id: test_button
         text: 'Raise hands over head to start!'
-        size: 100, 100
-        x: root.width * 0.45
-        y: root.height * 0.8
-        color: 0, 0, 0, 1
+        size: 700, 100
+        center_x: root.width * 0.5
+        center_y: root.height * 0.8
+        color: 0.7, 0.3, 0.8, 1
         on_press: root.transition()
 
     ImageButton:

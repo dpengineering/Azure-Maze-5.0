@@ -62,7 +62,7 @@ class PlayScreen(Screen):
     def timer(self):
         global score
         self.timer_button.text = "Ready?"
-        time.sleep(3) # was 7?
+        time.sleep(5) # was 7?
         self.timer_button.text = "3"
         sleep(1)
         self.timer_button.text = "2"
@@ -70,7 +70,7 @@ class PlayScreen(Screen):
         self.timer_button.text = "1"
         sleep(1)
         self.timer_button.text = "Go!"
-        time.sleep(1.3)
+        time.sleep(3)
         score = 0
         while True:
             # restart to here
@@ -189,7 +189,7 @@ class LeaderboardScreen(Screen):
 
     def enter(self):
         self.score_update()
-        sleep(5)
+        # sleep(5)
 
     def score_update(self):
         scores = []

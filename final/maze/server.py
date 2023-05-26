@@ -10,20 +10,21 @@ class PacketType(enum.Enum):
     COMMAND3 = 3
     COMMAND4 = 4
     COMMAND5 = 5
+    COMMAND6 = 6
 
 
 s = Server("172.17.21.1", 5001, PacketType)
 serverCreated = False
 
 
-def create_server():
-    global serverCreated
-    print('server created')
-    s.open_server()
-    print('server opened, now waiting for connection!')
-    s.wait_for_connection()
-    serverCreated = True
-    return True
+# def create_server():
+#     global serverCreated
+#     print('server created')
+#     s.open_server()
+#     print('server opened, now waiting for connection!')
+#     s.wait_for_connection()
+#     serverCreated = True
+#     return True
 
 
 class Ball_Pump:
@@ -32,6 +33,24 @@ class Ball_Pump:
         with open("maze_arduino.txt", "r") as f:
             start_orientation = str(f.readline())
         self.orientation = start_orientation
+
+    def create_server(self):
+        global serverCreated
+        print('server created')
+        s.open_server()
+        print('server opened, now waiting for connection!')
+        s.wait_for_connection()
+        serverCreated = True
+        return True
+
+    def check_server(self):
+        if serverCreated == True:
+            s.send_packet(PacketType.COMMAND6, b"quitting")
+            s.close_connection()
+            s.close_server()
+        if serverCreated == False:
+            self.create_server()
+
 
     def switch(self, num):
         if num == 0:
